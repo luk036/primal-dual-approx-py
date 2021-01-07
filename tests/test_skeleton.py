@@ -2,7 +2,7 @@
 
 import pytest
 
-from primal-dual-approx.py.skeleton import fib
+from pldl.skeleton import fib
 
 __author__ = "Wai-Shing Luk"
 __copyright__ = "Wai-Shing Luk"

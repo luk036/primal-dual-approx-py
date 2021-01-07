@@ -6,7 +6,7 @@ console script. To run this script uncomment the following lines in the
 [options.entry_points] section in setup.cfg:
 
     console_scripts =
-         fibonacci = primal-dual-approx.py.skeleton:run
+         fibonacci = pldl.skeleton:run
 
 Then run `python setup.py install` which will install the command `fibonacci`
 inside your current environment.
@@ -20,7 +20,7 @@ import argparse
 import logging
 import sys
 
-from primal-dual-approx.py import __version__
+from pldl import __version__
 
 __author__ = "Wai-Shing Luk"
 __copyright__ = "Wai-Shing Luk"
@@ -59,7 +59,7 @@ def parse_args(args):
     parser.add_argument(
         "--version",
         action="version",
-        version="primal-dual-approx.py {ver}".format(ver=__version__))
+        version="pldl {ver}".format(ver=__version__))
     parser.add_argument(
         dest="n",
         help="n-th Fibonacci number",

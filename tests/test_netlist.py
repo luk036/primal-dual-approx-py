@@ -1,5 +1,5 @@
 
-from primal-dual-approx.py.netlist import create_drawf, create_test_netlist
+from pldl.netlist import create_drawf, create_test_netlist
 
 
 def test_netlist():

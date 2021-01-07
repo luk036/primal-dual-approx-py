@@ -1,15 +1,15 @@
 #! /usr/bin/env python3
 from random import randint
 
-from primal-dual-approx.py.MLPartMgr import MLKWayPartMgr
-from primal-dual-approx.py.netlist import Netlist, read_json
+from pldl.MLPartMgr import MLKWayPartMgr
+from pldl.netlist import Netlist, read_json
 import matplotlib.pyplot as plt
 import networkx as nx
 import argparse
 import logging
 import sys
 
-from primal-dual-approx.py import __version__
+from pldl import __version__
 
 __author__ = "Wai-Shing Luk"
 __copyright__ = "Wai-Shing Luk"
@@ -77,7 +77,7 @@ def parse_args(args):
         description="Multilevel Circuit 3-Way Partitioning")
     parser.add_argument("--version",
                         action="version",
-                        version="primal-dual-approx.py {ver}".format(ver=__version__))
+                        version="pldl {ver}".format(ver=__version__))
     parser.add_argument(dest="filename",
                         help="file in json format",
                         type=str,

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    Setup file for primal-dual-approx.py.
+    Setup file for primal-dual-approx-py.
     Use setup.cfg to configure your project.
 
     This file was generated with PyScaffold 3.2.1.

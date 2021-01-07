@@ -1,8 +1,8 @@
 ========
-primal-dual-approx.py
+primal-dual-approx-py
 ========
 
-This is the documentation of **primal-dual-approx.py**.
+This is the documentation of **primal-dual-approx-py**.
 
 .. note::
 

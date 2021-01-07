@@ -35,7 +35,7 @@ except ImportError:
     from sphinx import apidoc
 
 output_dir = os.path.join(__location__, "api")
-module_dir = os.path.join(__location__, "../src/primal-dual-approx.py")
+module_dir = os.path.join(__location__, "../src/primal-dual-approx-py")
 try:
     shutil.rmtree(output_dir)
 except FileNotFoundError:
@@ -81,7 +81,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'primal-dual-approx.py'
+project = u'primal-dual-approx-py'
 copyright = u'2019, Wai-Shing Luk'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -151,7 +151,7 @@ html_theme = 'sphinx_rtd_theme'
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
 try:
-    from primal-dual-approx.py import __version__ as version
+    from primal-dual-approx-py import __version__ as version
 except ImportError:
     pass
 else:
@@ -216,7 +216,7 @@ html_static_path = ['_static']
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'primal-dual-approx.py-doc'
+htmlhelp_basename = 'primal-dual-approx-py-doc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -235,7 +235,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'user_guide.tex', u'primal-dual-approx.py Documentation',
+  ('index', 'user_guide.tex', u'primal-dual-approx-py Documentation',
    u'Wai-Shing Luk', 'manual'),
 ]
 
