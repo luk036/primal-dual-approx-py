@@ -5,7 +5,7 @@ Minimum vertex cover for weighed graphs.
 """
 
 
-def min_vertex_cover(G, cover, weight):
+def min_vertex_cover(G, weight, cover):
     """Perform minimum weighted vertex cover using primal-dual
     approximation algorithm
 
@@ -32,7 +32,7 @@ def min_vertex_cover(G, cover, weight):
     return total_primal_cost
 
 
-def min_maximal_independant_set(G, indset, dep, weight):
+def min_maximal_independant_set(G, weight, indset, dep):
     """Perform minimum weighted maximal independant using primal-dual
     approximation algorithm
 

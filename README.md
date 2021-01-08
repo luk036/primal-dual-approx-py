@@ -1,7 +1,7 @@
 primal-dual-approx-py
 ========
 
-Circuit Partitioning Python Code
+Primal-dual Approximation Algorithms Python Code
 
 [![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/luk036/primal-dual-approx-py)
 ![Python application](https://github.com/luk036/primal-dual-approx-py/workflows/Python%20application/badge.svg)
