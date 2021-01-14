@@ -5,7 +5,7 @@ Minimum vertex cover for weighed graphs.
 """
 
 
-def min_vertex_cover(G, weight, cover):
+def min_vertex_cover(G, weight, coverset):
     """Perform minimum weighted vertex cover using primal-dual
     approximation algorithm
 
@@ -17,11 +17,11 @@ def min_vertex_cover(G, weight, cover):
     gap = weight.copy()
 
     for u, v in G.edges():
-        if cover[u] or cover[v]:
+        if coverset[u] or coverset[v]:
             continue
-        if gap[u] < gap[v]: 
+        if gap[u] < gap[v]:
             u, v = v, u  # swap
-        cover[v] = True
+        coverset[v] = True
         total_dual_cost += gap[v]
         total_primal_cost += weight[v]
         gap[u] -= gap[v]
@@ -39,7 +39,7 @@ def min_maximal_independant_set(G, weight, indset, dep):
     Returns:
         [type]: [description]
     """
-    def cover(u):
+    def coverset(u):
         dep[u] = True
         for v in G[u]:
             dep[v] = True
@@ -51,7 +51,7 @@ def min_maximal_independant_set(G, weight, indset, dep):
         if dep[u]:
             continue
         if indset[u]:  # pre-define indepentant
-            cover(u)
+            coverset(u)
             continue
         min_val = gap[u]
         min_vtx = u
@@ -61,7 +61,7 @@ def min_maximal_independant_set(G, weight, indset, dep):
             if min_val > gap[v]:
                 min_val = gap[v]
                 min_vtx = v
-        cover(min_vtx)
+        coverset(min_vtx)
         indset[min_vtx] = True
         total_primal_cost += weight[min_vtx]
         total_dual_cost += min_val
@@ -72,4 +72,3 @@ def min_maximal_independant_set(G, weight, indset, dep):
 
     assert total_dual_cost <= total_primal_cost
     return total_primal_cost
-
