@@ -4,7 +4,7 @@ primal-dual-approx-py
 Primal-dual Approximation Algorithms Python Code
 
 [![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/luk036/primal-dual-approx-py)
-![Python application](https://github.com/luk036/primal-dual-approx-py/workflows/Python%20application/badge.svg)
+![Python package](https://github.com/luk036/primal-dual-approx-py/workflows/Python%20package/badge.svg)
 [![Build Status](https://travis-ci.com/luk036/primal-dual-approx-py.svg?branch=main)](https://travis-ci.com/luk036/primal-dual-approx-py)
 [![Build status](https://ci.appveyor.com/api/projects/status/7h47qjklmnarn3to?svg=true)](https://ci.appveyor.com/project/luk036/primal-dual-approx-py)
 [![Documentation Status](https://readthedocs.org/projects/primal-dual-approx-py/badge/?version=latest)](https://primal-dual-approx-py.readthedocs.io/en/latest/?badge=latest)
