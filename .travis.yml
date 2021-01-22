@@ -20,7 +20,7 @@ install:
   # See `Dependency Management` in the docs for other options.
 before_script:
   - git config --global user.email "luk036@gmail.com"
-  - git config --global user.name "Danny Luk"
+  - git config --global user.name "Wai-Shing Luk"
 script:
   - python setup.py develop
   - tox
@@ -31,7 +31,6 @@ script:
 after_success:
   - |
     if [[ "$COVERAGE" == "true" ]]; then
-      coveralls || echo "failed"
       codecov || echo "failed"
     fi
 after_script:
