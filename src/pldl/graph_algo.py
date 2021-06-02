@@ -5,6 +5,11 @@ Minimum vertex cover for weighed graphs.
 """
 
 
+def min_odd_cycle_cover(G, weight, coverset):
+    """ @todo """
+    pass
+
+
 def min_vertex_cover(G, weight, coverset):
     """Perform minimum weighted vertex cover using primal-dual
     approximation algorithm
