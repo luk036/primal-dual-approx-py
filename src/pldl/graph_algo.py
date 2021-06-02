@@ -22,11 +22,11 @@ def min_vertex_cover(G, weight, coverset):
     gap = weight.copy()
 
     for u, v in G.edges():
-        if coverset[u] or coverset[v]:
+        if u in coverset or v in coverset:
             continue
         if gap[u] < gap[v]:
             u, v = v, u  # swap
-        coverset[v] = True
+        coverset.add(v)
         total_dual_cost += gap[v]
         total_primal_cost += weight[v]
         gap[u] -= gap[v]

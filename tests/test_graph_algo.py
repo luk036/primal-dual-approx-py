@@ -6,11 +6,11 @@ from pldl.graph_algo import min_vertex_cover, min_maximal_independant_set
 def test_min_vertex_cover():
     H = create_drawf()
     weight = dict()
-    covset = dict()
+    covset = set()
 
     for node in H.G:
         weight[node] = 1
-        covset[node] = False
+        # covset[node] = False
 
     rslt = min_vertex_cover(H.G, weight, covset)
     assert rslt == 8
