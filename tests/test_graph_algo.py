@@ -19,13 +19,11 @@ def test_min_vertex_cover():
 def test_min_maximal_independant_set():
     H = create_drawf()
     weight = dict()
-    indset = dict()
-    depset = dict()
+    indset = set()
+    depset = set()
 
     for node in H.G:
         weight[node] = 1
-        indset[node] = False
-        depset[node] = False
 
     rslt = min_maximal_independant_set(H.G, weight, indset, depset)
     assert rslt == 7

@@ -45,29 +45,29 @@ def min_maximal_independant_set(G, weight, indset, dep):
         [type]: [description]
     """
     def coverset(u):
-        dep[u] = True
+        dep.add(u)
         for v in G[u]:
-            dep[v] = True
+            dep.add(v)
 
     gap = weight.copy()
     total_primal_cost = 0
     total_dual_cost = 0
     for u in G:
-        if dep[u]:
+        if u in dep:
             continue
-        if indset[u]:  # pre-define indepentant
+        if u in indset:  # pre-define indepentant
             coverset(u)
             continue
         min_val = gap[u]
         min_vtx = u
         for v in G[u]:
-            if dep[v]:
+            if v in dep:
                 continue
             if min_val > gap[v]:
                 min_val = gap[v]
                 min_vtx = v
         coverset(min_vtx)
-        indset[min_vtx] = True
+        indset.add(min_vtx)
         total_primal_cost += weight[min_vtx]
         total_dual_cost += min_val
         if min_vtx == u:

@@ -15,11 +15,11 @@ def min_vertex_cover(H, weight, coverset):
     gap = weight.copy()
 
     for net in H.nets:
-        if any(coverset[v] for v in H.G[net]):
+        if any(v in coverset for v in H.G[net]):
             continue
         min_vtx = min(H.G[net], key=lambda v: gap[v])
         min_val = gap[min_vtx]
-        coverset[min_vtx] = True
+        coverset.add(min_vtx)
         total_primal_cost += weight[min_vtx]
         total_dual_cost += min_val
         for u in H.G[net]:
@@ -38,10 +38,10 @@ def min_maximal_matching(H, weight, matchset, dep):
     """
     def cover(net):
         for v in H.G[net]:
-            dep[v] = True
+            dep.add(v)
 
     def any_of_dep(net):
-        return any(dep[v] for v in H.G[net])
+        return any(v in dep for v in H.G[net])
 
     gap = weight.copy()
     total_primal_cost = 0
@@ -49,7 +49,7 @@ def min_maximal_matching(H, weight, matchset, dep):
     for net in H.nets:
         if any_of_dep(net):
             continue
-        if matchset[net]:  # pre-define matching
+        if net in matchset:  # pre-define matching
             cover(net)
             continue
         min_val = gap[net]
@@ -62,7 +62,7 @@ def min_maximal_matching(H, weight, matchset, dep):
                     min_val = gap[net2]
                     min_net = net2
         cover(min_net)
-        matchset[min_net] = True
+        matchset.add(min_net)
         total_primal_cost += weight[min_net]
         total_dual_cost += min_val
         if min_net == net:

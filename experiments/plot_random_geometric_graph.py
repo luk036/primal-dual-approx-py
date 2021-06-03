@@ -38,11 +38,8 @@ nx.draw_networkx_nodes(
     cmap=plt.cm.Reds_r,
 )
 
-indset = dict()
-depset = dict()
-for node in G:
-    indset[node] = False
-    depset[node] = False
+indset = set()
+depset = set()
 total_primal_cost = min_maximal_independant_set(G, p, indset, depset)
 
 nx.draw_networkx_nodes(
