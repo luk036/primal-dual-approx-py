@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 from pldl.graph_algo import min_maximal_independant_set
 
-G = nx.random_geometric_graph(200, 0.125)
+G = nx.random_geometric_graph(200, 0.1)
 # position is stored as node attribute data for random_geometric_graph
 pos = nx.get_node_attributes(G, "pos")
 
@@ -26,6 +26,10 @@ for n in pos:
 
 # color by path length from node near center
 p = dict(nx.single_source_shortest_path_length(G, ncenter))
+# fix for disconnected components
+for v in G:
+    if v not in p:
+        p[v] = 1
 
 plt.figure(figsize=(8, 8))
 nx.draw_networkx_edges(G, pos, nodelist=[ncenter], alpha=0.4)
@@ -45,7 +49,7 @@ total_primal_cost = min_maximal_independant_set(G, p, indset, depset)
 nx.draw_networkx_nodes(
     G,
     pos,
-    nodelist=list(v for v in indset if indset[v]),
+    nodelist=list(v for v in indset if v in indset),
     node_size=80,
     # node_color="blue",
     # cmap=plt.cm.Reds_r,

@@ -3,32 +3,6 @@ Minimum vertex cover for weighed netlist.
 """
 
 
-def min_vertex_cover(H, weight, coverset):
-    """Perform minimum weighted vertex cover using primal-dual
-    approximation algorithm
-
-    Returns:
-        [type]: [description]
-    """
-    total_dual_cost = 0  # for assertion
-    total_primal_cost = 0
-    gap = weight.copy()
-
-    for net in H.nets:
-        if any(v in coverset for v in H.G[net]):
-            continue
-        min_vtx = min(H.G[net], key=lambda v: gap[v])
-        min_val = gap[min_vtx]
-        coverset.add(min_vtx)
-        total_primal_cost += weight[min_vtx]
-        total_dual_cost += min_val
-        for u in H.G[net]:
-            gap[u] -= min_val
-
-    assert total_dual_cost <= total_primal_cost
-    return total_primal_cost
-
-
 def min_maximal_matching(H, weight, matchset, dep):
     """Perform minimum weighted maximal matching using primal-dual
     approximation algorithm
@@ -76,3 +50,40 @@ def min_maximal_matching(H, weight, matchset, dep):
 
     assert total_dual_cost <= total_primal_cost
     return total_primal_cost
+
+
+def pd_cover(Voilate, weight, soln):
+    """Perform primal-dual approximation algorithm
+
+    Returns:
+        [type]: [description]
+    """
+    gap = weight.copy()
+    total_primal_cost = 0
+    total_dual_cost = 0
+    for S in Voilate():
+        min_vtx = min(S, key=lambda v: gap[v])
+        min_val = gap[min_vtx]
+        soln.add(min_vtx)
+        total_primal_cost += weight[min_vtx]
+        total_dual_cost += min_val
+        for v in S:
+            gap[v] -= min_val
+    assert total_dual_cost <= total_primal_cost
+    return total_primal_cost
+
+
+def min_vertex_cover(H, weight, coverset):
+    """Perform minimum weighted vertex cover using primal-dual
+    approximation algorithm
+
+    Returns:
+        [type]: [description]
+    """
+    def voilate():
+        for net in H.nets:
+            if any(v in coverset for v in H.G[net]):
+                continue
+            yield H.G[net]
+
+    return pd_cover(voilate, weight, coverset)
