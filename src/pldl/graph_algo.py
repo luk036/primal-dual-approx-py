@@ -65,7 +65,7 @@ def min_maximal_independant_set(G, weight: Union[list, dict], indset: set,
         if u in dep:
             continue
         if u in indset:  # pre-define indepentant
-            coverset(u)
+            # coverset(u)
             continue
         min_val = gap[u]
         min_vtx = u
@@ -131,54 +131,94 @@ def min_vertex_cover(G, weight, coverset):
     return pd_cover(voilate, weight, coverset)
 
 
-def generic_bfs_edges(G, source, covered):
+def construct_cycle(info, parent, child):
+    _, depth_now = info[parent]
+    _, depth_child = info[child]
+    if depth_now < depth_child:
+        node_a, depth_a = parent, depth_now
+        node_b, depth_b = child, depth_child
+    else:
+        node_a, depth_a = child, depth_child
+        node_b, depth_b = parent, depth_now
+    S = deque()
+    while depth_a < depth_b:
+        S.append(node_a)
+        node_a, depth_a = info[node_a]
+    # depth_now == depth
+    while node_a != node_b:
+        S.append(node_a)
+        S.appendleft(node_b)
+        node_a, _ = info[node_a]
+        node_b, _ = info[node_b]
+    S.appendleft(node_b)
+    return S
+
+
+def generic_bfs_cycle(G, covered):
     depth_limit = len(G)
-    info = {source: (source, depth_limit)}
     neighbors = G.neighbors
-    queue = deque([(source, depth_limit)])
-    while queue:
-        parent, depth_now = queue.popleft()
-        for child in neighbors(parent):
-            if covered(child):
-                continue
-            if child not in info:
-                info[child] = (parent, depth_now - 1)
-                queue.append((child, depth_now - 1))
-                continue
-            succ, dlimit = info[child]
-            if succ != parent:  # cycle found
-                pass
+    for source in G:
+        if source in covered:
+            continue
+        info = {source: (source, depth_limit)}
+        queue = deque([source])
+        while queue:
+            parent = queue.popleft()
+            succ, depth_now = info[parent]
+            for child in neighbors(parent):
+                if child in covered:
+                    continue
+                if child not in info:
+                    info[child] = (parent, depth_now - 1)
+                    queue.append(child)
+                    continue
+                if succ == child:
+                    continue
+                # cycle found
+                yield info, parent, child
 
 
-def min_cycle_cover(G, weight, covset, dep):
+def min_cycle_cover(G, weight, covered):
     """Perform minimum cycle cover using primal-dual
     approximation algorithm
 
     Returns:
         [type]: [description]
     """
-    def coverset(u):
-        dep.add(u)
-        for v in G[u]:
-            dep.add(v)
+    def find_cycle():
+        for info, parent, child in generic_bfs_cycle(G, covered):
+            return construct_cycle(info, parent, child)
 
     def voilate():
-        for u in G:
-            if u in dep:
-                continue
-            if u in covset:  # pre-define indepentant
-                coverset(u)
-                continue
-            S = [u]
-            for v in G[u]:
-                if v in dep:
-                    continue
-                S += [v]
+        while True:
+            S = find_cycle()
+            if S is None:
+                break
             yield S
 
-    return pd_cover(voilate, weight, covset)
+    return pd_cover(voilate, weight, covered)
 
 
-def min_odd_cycle_cover(G, weight, coverset):
-    """ @todo """
-    pass
+def min_odd_cycle_cover(G, weight, covered):
+    """Perform minimum cycle cover using primal-dual
+    approximation algorithm
+
+    Returns:
+        [type]: [description]
+    """
+    def find_odd_cycle():
+        for info, parent, child in generic_bfs_cycle(G, covered):
+            _, depth_child = info[child]
+            _, depth_parent = info[parent]
+            if (depth_parent - depth_child) % 2 != 0:
+                continue
+            return construct_cycle(info, parent, child)
+
+    def voilate():
+        while True:
+            S = find_odd_cycle()
+            if S is None:
+                break
+            yield S
+
+    return pd_cover(voilate, weight, covered)

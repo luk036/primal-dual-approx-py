@@ -8,7 +8,7 @@ Example
 
 import matplotlib.pyplot as plt
 import networkx as nx
-from pldl.graph_algo import min_maximal_independant_set
+from pldl.graph_algo import min_odd_cycle_cover
 
 G = nx.random_geometric_graph(200, 0.1)
 # position is stored as node attribute data for random_geometric_graph
@@ -42,14 +42,14 @@ nx.draw_networkx_nodes(
     cmap=plt.cm.Reds_r,
 )
 
-indset = set()
-depset = set()
-total_primal_cost = min_maximal_independant_set(G, p, indset, depset)
+solnset = set()
+# depset = set()
+total_primal_cost = min_odd_cycle_cover(G, p, solnset)
 
 nx.draw_networkx_nodes(
     G,
     pos,
-    nodelist=list(v for v in indset if v in indset),
+    nodelist=list(v for v in solnset),
     node_size=80,
     # node_color="blue",
     # cmap=plt.cm.Reds_r,

@@ -24,7 +24,7 @@ def min_maximal_matching(H, weight, matchset, dep):
         if any_of_dep(net):
             continue
         if net in matchset:  # pre-define matching
-            cover(net)
+            # cover(net)
             continue
         min_val = gap[net]
         min_net = net
