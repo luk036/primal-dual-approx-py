@@ -5,6 +5,7 @@ Minimum vertex cover for weighed graphs.
 """
 from collections import deque
 from typing import Callable, Union
+# import random
 
 
 def min_vertex_cover_fast(G, weight: Union[list, dict],
@@ -36,7 +37,6 @@ def min_vertex_cover_fast(G, weight: Union[list, dict],
         gap[v] = 0
 
     assert total_dual_cost <= total_primal_cost
-    assert total_primal_cost <= 2 * total_dual_cost
     return total_primal_cost
 
 
@@ -45,7 +45,7 @@ def min_maximal_independant_set(G, weight: Union[list, dict], indset: set,
     """Perform minimum weighted maximal independant using primal-dual
 
     Args:
-        G ([nx.Graph]): a undirected graph
+        G (nx.Graph): a undirected graph
         weight (Union[list, dict]): weight of vertex
         indset (set): [description]
         dep (set): [description]
@@ -88,12 +88,12 @@ def min_maximal_independant_set(G, weight: Union[list, dict], indset: set,
     return total_primal_cost
 
 
-def pd_cover(Voilate: Callable, weight: Union[list, dict],
+def pd_cover(Violate: Callable, weight: Union[list, dict],
              soln: set) -> Union[int, float]:
     """Perform primal-dual approximation algorithm for covering problems
 
     Args:
-        Voilate (Callable): an oracle for return a set of Voilate elements
+        Violate (Callable): an oracle for return a set of Violate elements
         weight (Union[list, dict]): the weight of element
         soln ([type]): solution set
 
@@ -103,7 +103,7 @@ def pd_cover(Voilate: Callable, weight: Union[list, dict],
     gap = weight.copy()
     total_primal_cost = 0
     total_dual_cost = 0
-    for S in Voilate():
+    for S in Violate():
         min_vtx = min(S, key=lambda v: gap[v])
         min_val = gap[min_vtx]
         soln.add(min_vtx)
@@ -122,16 +122,26 @@ def min_vertex_cover(G, weight, coverset):
     Returns:
         [type]: [description]
     """
-    def voilate():
+    def violate():
         for u, v in G.edges():
             if u in coverset or v in coverset:
                 continue
             yield [u, v]
 
-    return pd_cover(voilate, weight, coverset)
+    return pd_cover(violate, weight, coverset)
 
 
-def construct_cycle(info, parent, child):
+def _construct_cycle(info, parent, child):
+    """[summary]
+
+    Args:
+        info ([type]): [description]
+        parent ([type]): [description]
+        child ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
     _, depth_now = info[parent]
     _, depth_child = info[child]
     if depth_now < depth_child:
@@ -154,10 +164,12 @@ def construct_cycle(info, parent, child):
     return S
 
 
-def generic_bfs_cycle(G, covered):
+def _generic_bfs_cycle(G, covered):
     depth_limit = len(G)
     neighbors = G.neighbors
-    for source in G:
+    nodelist = list(G.nodes())
+    # random.shuffle(nodelist)
+    for source in nodelist:
         if source in covered:
             continue
         info = {source: (source, depth_limit)}
@@ -182,43 +194,46 @@ def min_cycle_cover(G, weight, covered):
     """Perform minimum cycle cover using primal-dual
     approximation algorithm
 
-    Returns:
-        [type]: [description]
+    Args:
+        G ([type]): [description]
+        weight ([type]): [description]
+        covered ([type]): [description]
     """
     def find_cycle():
-        for info, parent, child in generic_bfs_cycle(G, covered):
-            return construct_cycle(info, parent, child)
+        for info, parent, child in _generic_bfs_cycle(G, covered):
+            return _construct_cycle(info, parent, child)
 
-    def voilate():
+    def violate():
         while True:
             S = find_cycle()
             if S is None:
                 break
             yield S
 
-    return pd_cover(voilate, weight, covered)
+    return pd_cover(violate, weight, covered)
 
 
 def min_odd_cycle_cover(G, weight, covered):
-    """Perform minimum cycle cover using primal-dual
+    """Perform minimum odd cycle cover using primal-dual
     approximation algorithm
 
-    Returns:
-        [type]: [description]
+    Args:
+        G ([type]): [description]
+        weight ([type]): [description]
+        covered ([type]): [description]
     """
     def find_odd_cycle():
-        for info, parent, child in generic_bfs_cycle(G, covered):
+        for info, parent, child in _generic_bfs_cycle(G, covered):
             _, depth_child = info[child]
             _, depth_parent = info[parent]
-            if (depth_parent - depth_child) % 2 != 0:
-                continue
-            return construct_cycle(info, parent, child)
+            if (depth_parent - depth_child) % 2 == 0:
+                return _construct_cycle(info, parent, child)
 
-    def voilate():
+    def violate():
         while True:
             S = find_odd_cycle()
             if S is None:
                 break
             yield S
 
-    return pd_cover(voilate, weight, covered)
+    return pd_cover(violate, weight, covered)
