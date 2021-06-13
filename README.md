@@ -28,7 +28,7 @@ To run unit tests:
 See also
 --------
 
-[ckpttncpp](https://github.com/luk036/ckpttncpp)
+[primal-dual-approx-cpp](https://github.com/luk036/primal-dual-approx-cpp)
 
 Note
 ----
