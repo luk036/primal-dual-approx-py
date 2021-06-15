@@ -1,7 +1,6 @@
 """
 Minimum vertex cover for weighted netlist.
 """
-from .graph_algo import pd_cover
 
 
 def min_maximal_matching(H, weight, matchset, dep):
@@ -51,19 +50,3 @@ def min_maximal_matching(H, weight, matchset, dep):
 
     assert total_dual_cost <= total_primal_cost
     return total_primal_cost
-
-
-def min_vertex_cover(H, weight, coverset):
-    """Perform minimum weighted vertex cover using primal-dual
-    approximation algorithm
-
-    Returns:
-        [type]: [description]
-    """
-    def violate():
-        for net in H.nets:
-            if any(v in coverset for v in H.G[net]):
-                continue
-            yield H.G[net]
-
-    return pd_cover(violate, weight, coverset)

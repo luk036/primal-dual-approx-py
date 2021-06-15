@@ -1,6 +1,7 @@
 
 from pldl.netlist import create_drawf
-from pldl.netlist_algo import min_vertex_cover, min_maximal_matching
+from pldl.netlist_algo import min_maximal_matching
+from pldl.cover import min_vertex_cover
 
 
 def test_min_vertex_cover():
