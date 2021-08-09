@@ -1,11 +1,14 @@
-from .netlist import Netlist
-from networkx import nx
 from collections import deque
 from typing import Callable, Union
 
+import networkx as nx
 
-def pd_cover(Violate: Callable, weight: Union[list, dict],
-             soln: set) -> Union[int, float]:
+from .netlist import Netlist
+
+
+def pd_cover(
+    Violate: Callable, weight: Union[list, dict], soln: set
+) -> Union[int, float]:
     """Perform primal-dual approximation algorithm for covering problems
 
     Args:
@@ -38,6 +41,7 @@ def min_vertex_cover(H, weight, coverset):
     Returns:
         [type]: [description]
     """
+
     def violate_netlist():
         for net in H.nets:
             if any(v in coverset for v in H.G[net]):
@@ -126,6 +130,7 @@ def min_cycle_cover(G, weight, covered):
         weight ([type]): [description]
         covered ([type]): [description]
     """
+
     def find_cycle():
         for info, parent, child in _generic_bfs_cycle(G, covered):
             return _construct_cycle(info, parent, child)
@@ -149,6 +154,7 @@ def min_odd_cycle_cover(G, weight, covered):
         weight ([type]): [description]
         covered ([type]): [description]
     """
+
     def find_odd_cycle():
         for info, parent, child in _generic_bfs_cycle(G, covered):
             _, depth_child = info[child]
