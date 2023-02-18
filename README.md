@@ -1,3 +1,5 @@
+[![Documentation Status](https://readthedocs.org/projects/primal-dual-approx-py/badge/?version=latest)](https://primal-dual-approx-py.readthedocs.io/en/latest/?badge=latest)
+
 # primal-dual-approx-py
 
 Add a short description here!
