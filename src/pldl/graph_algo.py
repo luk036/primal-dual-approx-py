@@ -7,13 +7,13 @@ from typing import Union
 # import random
 
 
-def min_vertex_cover_fast(G, weight: Union[list, dict],
+def min_vertex_cover_fast(gra, weight: Union[list, dict],
                           coverset: set) -> Union[int, float]:
     """Perform minimum weighted vertex cover using primal-dual
     approximation algorithm
 
     Args:
-        G ([type]): [description]
+        gra ([type]): [description]
         weight (Union[list, dict]): [description]
         coverset (set): [description]
 
@@ -24,27 +24,27 @@ def min_vertex_cover_fast(G, weight: Union[list, dict],
     total_primal_cost = 0
     gap = weight.copy()
 
-    for u, v in G.edges():
-        if u in coverset or v in coverset:
+    for u, vtx in gra.edges():
+        if u in coverset or vtx in coverset:
             continue
-        if gap[u] < gap[v]:
-            u, v = v, u  # swap
-        coverset.add(v)
-        total_dual_cost += gap[v]
-        total_primal_cost += weight[v]
-        gap[u] -= gap[v]
-        gap[v] = 0
+        if gap[u] < gap[vtx]:
+            u, vtx = vtx, u  # swap
+        coverset.add(vtx)
+        total_dual_cost += gap[vtx]
+        total_primal_cost += weight[vtx]
+        gap[u] -= gap[vtx]
+        gap[vtx] = 0
 
     assert total_dual_cost <= total_primal_cost
     return total_primal_cost
 
 
-def min_maximal_independant_set(G, weight: Union[list, dict], indset: set,
+def min_maximal_independant_set(gra, weight: Union[list, dict], indset: set,
                                 dep: set) -> Union[int, float]:
     """Perform minimum weighted maximal independant using primal-dual
 
     Args:
-        G (nx.Graph): a undirected graph
+        gra (nx.Graph): a undirected graph
         weight (Union[list, dict]): weight of vertex
         indset (set): [description]
         dep (set): [description]
@@ -54,13 +54,13 @@ def min_maximal_independant_set(G, weight: Union[list, dict], indset: set,
     """
     def coverset(u):
         dep.add(u)
-        for v in G[u]:
-            dep.add(v)
+        for vtx in gra[u]:
+            dep.add(vtx)
 
     gap = weight.copy()
     total_primal_cost = 0
     total_dual_cost = 0
-    for u in G:
+    for u in gra:
         if u in dep:
             continue
         if u in indset:  # pre-define indepentant
@@ -68,20 +68,20 @@ def min_maximal_independant_set(G, weight: Union[list, dict], indset: set,
             continue
         min_val = gap[u]
         min_vtx = u
-        for v in G[u]:
-            if v in dep:
+        for vtx in gra[u]:
+            if vtx in dep:
                 continue
-            if min_val > gap[v]:
-                min_val = gap[v]
-                min_vtx = v
+            if min_val > gap[vtx]:
+                min_val = gap[vtx]
+                min_vtx = vtx
         indset.add(min_vtx)
         coverset(min_vtx)
         total_primal_cost += weight[min_vtx]
         total_dual_cost += min_val
         if min_vtx == u:
             continue
-        for v in G[u]:
-            gap[v] -= min_val
+        for vtx in gra[u]:
+            gap[vtx] -= min_val
 
     assert total_dual_cost <= total_primal_cost
     return total_primal_cost

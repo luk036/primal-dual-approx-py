@@ -183,7 +183,7 @@ html_theme = "sphinx_rtd_theme"
 # html_theme_path = []
 
 # The name for this set of Sphinx documents.  If None, it defaults to
-# "<project> v<release> documentation".
+# "<project> vtx<release> documentation".
 try:
     from pldl import __version__ as version
 except ImportError:

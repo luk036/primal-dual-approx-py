@@ -7,12 +7,12 @@ from .netlist import Netlist
 
 
 def pd_cover(
-    Violate: Callable, weight: Union[list, dict], soln: set
+    violate: Callable, weight: Union[list, dict], soln: set
 ) -> Union[int, float]:
     """Perform primal-dual approximation algorithm for covering problems
 
     Args:
-        Violate (Callable): an oracle for return a set of Violate elements
+        violate (Callable): an oracle for return a set of violate elements
         weight (Union[list, dict]): the weight of element
         soln ([type]): solution set
 
@@ -22,19 +22,19 @@ def pd_cover(
     gap = weight.copy()
     total_primal_cost = 0
     total_dual_cost = 0
-    for S in Violate():
-        min_vtx = min(S, key=lambda v: gap[v])
+    for S in violate():
+        min_vtx = min(S, key=lambda vtx: gap[vtx])
         min_val = gap[min_vtx]
         soln.add(min_vtx)
         total_primal_cost += weight[min_vtx]
         total_dual_cost += min_val
-        for v in S:
-            gap[v] -= min_val
+        for vtx in S:
+            gap[vtx] -= min_val
     assert total_dual_cost <= total_primal_cost
     return total_primal_cost
 
 
-def min_vertex_cover(H, weight, coverset):
+def min_vertex_cover(hgr, weight, coverset):
     """Perform minimum weighted vertex cover using primal-dual
     approximation algorithm
 
@@ -43,20 +43,20 @@ def min_vertex_cover(H, weight, coverset):
     """
 
     def violate_netlist():
-        for net in H.nets:
-            if any(v in coverset for v in H.G[net]):
+        for net in hgr.nets:
+            if any(vtx in coverset for vtx in hgr.gra[net]):
                 continue
-            yield H.G[net]
+            yield hgr.gra[net]
 
     def violate_graph():
-        for u, v in H.edges():
-            if u in coverset or v in coverset:
+        for u, vtx in hgr.edges():
+            if u in coverset or vtx in coverset:
                 continue
-            yield [u, v]
+            yield [u, vtx]
 
-    if isinstance(H, Netlist):
+    if isinstance(hgr, Netlist):
         return pd_cover(violate_netlist, weight, coverset)
-    elif isinstance(H, nx.Graph):
+    elif isinstance(hgr, nx.Graph):
         return pd_cover(violate_graph, weight, coverset)
     else:
         raise NotImplementedError
@@ -95,10 +95,10 @@ def _construct_cycle(info, parent, child):
     return S
 
 
-def _generic_bfs_cycle(G, covered):
-    depth_limit = len(G)
-    neighbors = G.neighbors
-    nodelist = list(G.nodes())
+def _generic_bfs_cycle(gra, covered):
+    depth_limit = len(gra)
+    neighbors = gra.neighbors
+    nodelist = list(gra.nodes())
     # random.shuffle(nodelist)
     for source in nodelist:
         if source in covered:
@@ -121,18 +121,18 @@ def _generic_bfs_cycle(G, covered):
                 yield info, parent, child
 
 
-def min_cycle_cover(G, weight, covered):
+def min_cycle_cover(gra, weight, covered):
     """Perform minimum cycle cover using primal-dual
     approximation algorithm
 
     Args:
-        G ([type]): [description]
+        gra ([type]): [description]
         weight ([type]): [description]
         covered ([type]): [description]
     """
 
     def find_cycle():
-        for info, parent, child in _generic_bfs_cycle(G, covered):
+        for info, parent, child in _generic_bfs_cycle(gra, covered):
             return _construct_cycle(info, parent, child)
 
     def violate():
@@ -145,18 +145,18 @@ def min_cycle_cover(G, weight, covered):
     return pd_cover(violate, weight, covered)
 
 
-def min_odd_cycle_cover(G, weight, covered):
+def min_odd_cycle_cover(gra, weight, covered):
     """Perform minimum odd cycle cover using primal-dual
     approximation algorithm
 
     Args:
-        G ([type]): [description]
+        gra ([type]): [description]
         weight ([type]): [description]
         covered ([type]): [description]
     """
 
     def find_odd_cycle():
-        for info, parent, child in _generic_bfs_cycle(G, covered):
+        for info, parent, child in _generic_bfs_cycle(gra, covered):
             _, depth_child = info[child]
             _, depth_parent = info[parent]
             if (depth_parent - depth_child) % 2 == 0:

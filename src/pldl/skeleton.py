@@ -80,7 +80,7 @@ def parse_args(args):
     )
     parser.add_argument(dest="n", help="n-th Fibonacci number", type=int, metavar="INT")
     parser.add_argument(
-        "-v",
+        "-vtx",
         "--verbose",
         dest="loglevel",
         help="set loglevel to INFO",
@@ -106,7 +106,7 @@ def setup_logging(loglevel):
     """
     logformat = "[%(asctime)s] %(levelname)s:%(name)s:%(message)s"
     logging.basicConfig(
-        level=loglevel, stream=sys.stdout, format=logformat, datefmt="%Y-%m-%d %H:%M:%S"
+        level=loglevel, stream=sys.stdout, format=logformat, datefmt="%Y-%m-%d %hgr:%M:%S"
     )
 
 

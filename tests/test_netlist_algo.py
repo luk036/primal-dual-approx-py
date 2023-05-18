@@ -5,25 +5,25 @@ from pldl.cover import min_vertex_cover
 
 
 def test_min_vertex_cover():
-    H = create_drawf()
+    hgr = create_drawf()
     weight = dict()
     covset = set()
 
-    for node in H.modules:
+    for node in hgr.modules:
         weight[node] = 1
 
-    rslt = min_vertex_cover(H, weight, covset)
+    rslt = min_vertex_cover(hgr, weight, covset)
     assert rslt == 6
 
 
 def test_min_maximal_matching():
-    H = create_drawf()
+    hgr = create_drawf()
     weight = dict()
     indset = set()
     depset = set()
 
-    for net in H.nets:
+    for net in hgr.nets:
         weight[net] = 1
 
-    rslt = min_maximal_matching(H, weight, indset, depset)
+    rslt = min_maximal_matching(hgr, weight, indset, depset)
     assert rslt == 3

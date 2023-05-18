@@ -9,9 +9,9 @@ import networkx as nx
 from random import randint
 from pldl.graph_algo import min_maximal_independant_set
 
-G = nx.random_geometric_graph(200, 0.1)
+gra = nx.random_geometric_graph(200, 0.1)
 # position is stored as node attribute data for random_geometric_graph
-pos = nx.get_node_attributes(G, "pos")
+pos = nx.get_node_attributes(gra, "pos")
 
 # find node near center (0.5,0.5)
 dmin = 1
@@ -24,17 +24,17 @@ for n in pos:
         dmin = d
 
 # color by path length from node near center
-# p = dict(nx.single_source_shortest_path_length(G, ncenter))
+# p = dict(nx.single_source_shortest_path_length(gra, ncenter))
 
 p = dict()
-for v in G:
-    if v not in p:
-        p[v] = randint(20, 100)
+for vtx in gra:
+    if vtx not in p:
+        p[vtx] = randint(20, 100)
 
 plt.figure(figsize=(8, 8))
-nx.draw_networkx_edges(G, pos, nodelist=[ncenter], alpha=0.4)
+nx.draw_networkx_edges(gra, pos, nodelist=[ncenter], alpha=0.4)
 nx.draw_networkx_nodes(
-    G,
+    gra,
     pos,
     nodelist=list(p.keys()),
     node_size=list(p.values()),
@@ -44,12 +44,12 @@ nx.draw_networkx_nodes(
 
 solnset = set()
 depset = set()
-total_primal_cost = min_maximal_independant_set(G, p, solnset, depset)
+total_primal_cost = min_maximal_independant_set(gra, p, solnset, depset)
 
 nx.draw_networkx_nodes(
-    G,
+    gra,
     pos,
-    nodelist=list(v for v in solnset),
+    nodelist=list(vtx for vtx in solnset),
     node_size=20,
     # node_color="blue",
     # cmap=plt.cm.Reds_r,

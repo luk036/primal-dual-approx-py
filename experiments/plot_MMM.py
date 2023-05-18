@@ -17,15 +17,15 @@ __license__ = "mit"
 _logger = logging.getLogger(__name__)
 
 
-def run_MMM(H: Netlist):
+def run_MMM(hgr: Netlist):
     mincost = 100000000000
     minpart = []
-    randseq = [randint(0, 1) for _ in range(H.number_of_modules())]
+    randseq = [randint(0, 1) for _ in range(hgr.number_of_modules())]
 
-    if isinstance(H.modules, range):
+    if isinstance(hgr.modules, range):
         part = randseq
-    elif isinstance(H.modules, list):
-        part = {v: k for v, k in zip(H.modules, randseq)}
+    elif isinstance(hgr.modules, list):
+        part = {vtx: k for vtx, k in zip(hgr.modules, randseq)}
     else:
         raise NotImplementedError
 
@@ -33,23 +33,23 @@ def run_MMM(H: Netlist):
     return mincost, minpart
 
 
-def plot(H: Netlist, p, solnset):
-    N = H.number_of_modules()
-    M = H.number_of_nets()
-    pos = nx.spring_layout(H.G)
-    nx.draw_networkx_edges(H.G, pos=pos, width=1)
-    nx.draw_networkx_nodes(H.G,
+def plot(hgr: Netlist, p, solnset):
+    N = hgr.number_of_modules()
+    M = hgr.number_of_nets()
+    pos = nx.spring_layout(hgr.gra)
+    nx.draw_networkx_edges(hgr.gra, pos=pos, width=1)
+    nx.draw_networkx_nodes(hgr.gra,
                            nodelist=range(N, N + M),
                            node_color='y',
                            node_size=40,
                            pos=pos)
-    nx.draw_networkx_nodes(H.G,
+    nx.draw_networkx_nodes(hgr.gra,
                            nodelist=list(p.keys()),
                            node_size=list(p.values()),
                            node_color=list(p.values()),
                            cmap=plt.cm.Reds_r,
                            pos=pos)
-    nx.draw_networkx_nodes(H.G,
+    nx.draw_networkx_nodes(hgr.gra,
                            nodelist=solnset,
                            node_size=40,
                            node_color='c',
@@ -83,7 +83,7 @@ def parse_args(args):
                         help="ratio of nets and pins",
                         type=float,
                         metavar="FLOAT")
-    parser.add_argument("-v",
+    parser.add_argument("-vtx",
                         "--verbose",
                         dest="loglevel",
                         help="set loglevel to INFO",
@@ -114,7 +114,7 @@ def setup_logging(loglevel):
     logging.basicConfig(level=loglevel,
                         stream=sys.stdout,
                         format=logformat,
-                        datefmt="%Y-%m-%d %H:%M:%S")
+                        datefmt="%Y-%m-%d %hgr:%M:%S")
 
 
 def main(args):
@@ -134,21 +134,21 @@ def main(args):
     if args.eta > 0.3:
         _logger.warning("eta value {} may be too big".format(args.eta))
 
-    H = create_random_graph(args.N, args.M, args.eta)
+    hgr = create_random_graph(args.N, args.M, args.eta)
     p = dict()
-    for v in H.modules:
-        p[v] = randint(50, 100)
+    for vtx in hgr.modules:
+        p[vtx] = randint(50, 100)
     weight = dict()
-    for net in H.nets:
-        weight[net] = sum(p[v] for v in H.G[net])
+    for net in hgr.nets:
+        weight[net] = sum(p[vtx] for vtx in hgr.gra[net])
 
     solnset = set()
     depset = set()
-    totalcost = min_maximal_matching(H, weight, solnset, depset)
+    totalcost = min_maximal_matching(hgr, weight, solnset, depset)
     print("total cost = {}".format(totalcost))
 
     if args.plot:
-        plot(H, p, solnset)
+        plot(hgr, p, solnset)
     _logger.info("Script ends here")
 
 

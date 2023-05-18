@@ -3,7 +3,7 @@ Minimum vertex cover for weighted netlist.
 """
 
 
-def min_maximal_matching(H, weight, matchset, dep):
+def min_maximal_matching(hgr, weight, matchset, dep):
     """Perform minimum weighted maximal matching using primal-dual
     approximation algorithm
 
@@ -11,16 +11,16 @@ def min_maximal_matching(H, weight, matchset, dep):
         [type]: [description]
     """
     def cover(net):
-        for v in H.G[net]:
-            dep.add(v)
+        for vtx in hgr.gra[net]:
+            dep.add(vtx)
 
     def any_of_dep(net):
-        return any(v in dep for v in H.G[net])
+        return any(vtx in dep for vtx in hgr.gra[net])
 
     gap = weight.copy()
     total_primal_cost = 0
     total_dual_cost = 0
-    for net in H.nets:
+    for net in hgr.nets:
         if any_of_dep(net):
             continue
         if net in matchset:  # pre-define matching
@@ -28,8 +28,8 @@ def min_maximal_matching(H, weight, matchset, dep):
             continue
         min_val = gap[net]
         min_net = net
-        for v in H.G[net]:
-            for net2 in H.G[v]:
+        for vtx in hgr.gra[net]:
+            for net2 in hgr.gra[vtx]:
                 if any_of_dep(net2):
                     continue
                 if min_val > gap[net2]:
@@ -42,8 +42,8 @@ def min_maximal_matching(H, weight, matchset, dep):
         if min_net == net:
             continue
         gap[net] -= min_val
-        for v in H.G[net]:
-            for net2 in H.G[v]:
+        for vtx in hgr.gra[net]:
+            for net2 in hgr.gra[vtx]:
                 # if net2 == net:
                 #     continue
                 gap[net2] -= min_val
