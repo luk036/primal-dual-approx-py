@@ -1,27 +1,26 @@
 from collections import deque
-from typing import Callable, Union
-
 import networkx as nx
-
+import copy
 from .netlist import Netlist
 
+from typing import Callable, Union, Set
+from collections.abc import MutableSequence
 
 def pd_cover(
-    violate: Callable, weight: Union[list, dict], soln: set
-) -> Union[int, float]:
+    violate: Callable, weight: MutableSequence, soln: Set) -> Union[int, float]:
     """Perform primal-dual approximation algorithm for covering problems
 
     Args:
         violate (Callable): an oracle for return a set of violate elements
-        weight (Union[list, dict]): the weight of element
+        weight (MutableSequence): the weight of element
         soln ([type]): solution set
 
     Returns:
         Union[int, float]: total primal cost
     """
-    gap = weight.copy()
     total_primal_cost = 0
     total_dual_cost = 0
+    gap = copy.copy(weight)
     for S in violate():
         min_vtx = min(S, key=lambda vtx: gap[vtx])
         min_val = gap[min_vtx]
@@ -49,10 +48,10 @@ def min_vertex_cover(hgr, weight, coverset):
             yield hgr.gra[net]
 
     def violate_graph():
-        for u, vtx in hgr.edges():
-            if u in coverset or vtx in coverset:
+        for utx, vtx in hgr.edges():
+            if utx in coverset or vtx in coverset:
                 continue
-            yield [u, vtx]
+            yield [utx, vtx]
 
     if isinstance(hgr, Netlist):
         return pd_cover(violate_netlist, weight, coverset)

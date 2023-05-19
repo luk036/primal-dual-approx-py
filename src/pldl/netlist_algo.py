@@ -1,9 +1,14 @@
 """
 Minimum vertex cover for weighted netlist.
 """
+from .netlist import Netlist
+import copy
+from typing import Union, Set
+from collections.abc import MutableSequence
 
-
-def min_maximal_matching(hgr, weight, matchset, dep):
+def min_maximal_matching(
+    hgr: Netlist, weight: MutableSequence, matchset: Set, dep: Set
+) -> Union[int, float]:
     """Perform minimum weighted maximal matching using primal-dual
     approximation algorithm
 
@@ -17,9 +22,10 @@ def min_maximal_matching(hgr, weight, matchset, dep):
     def any_of_dep(net):
         return any(vtx in dep for vtx in hgr.gra[net])
 
-    gap = weight.copy()
     total_primal_cost = 0
     total_dual_cost = 0
+
+    gap = copy.copy(weight)
     for net in hgr.nets:
         if any_of_dep(net):
             continue

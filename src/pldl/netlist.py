@@ -2,7 +2,7 @@
 
 import json
 import random
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Set, Optional, Union
 
 import networkx as nx
 from networkx.algorithms import bipartite
@@ -50,7 +50,7 @@ class Netlist:
         self.num_nets = len(nets)
         self.net_weight: Optional[Union[Dict, List[int]]] = None
         self.module_weight: Optional[Union[Dict, List[int]]] = None
-        self.module_fixed: set = set()
+        self.module_fixed: Set = set()
 
         # self.module_dict = {}
         # for vtx in enumerate(self.module_list):
@@ -137,7 +137,7 @@ class Netlist:
     #     return 1 if self.module_weight is None \
     #         else self.module_weight[vtx]
 
-    def get_net_weight(self, net) -> int:
+    def get_net_weight(self, _) -> int:
         """[summary]
 
         Arguments:
@@ -307,7 +307,6 @@ def formGraph(N, M, pos, eta, seed=None):
         mu and eta are relative to 1/(N-1)
 
     Arguments:
-        t (float): the best-so-far optimal value
         pos ([type]): [description]
         eta ([type]): [description]
 
