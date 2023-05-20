@@ -4,23 +4,27 @@ Minimum vertex cover for weighed graphs.
 1. Support Lazy evalution
 """
 import networkx as nx
-from typing import Union, Set
+from typing import Union, Set, Optional
 from collections.abc import MutableSequence
 import copy
 
-def min_vertex_cover_fast(gra: nx.Graph, weight: MutableSequence,
-                          coverset: Set) -> Union[int, float]:
+def min_vertex_cover_fast(
+    gra: nx.Graph, weight: MutableSequence, coverset: Optional[Set]=None
+) -> Union[int, float]:
     """Perform minimum weighted vertex cover using primal-dual
     approximation algorithm
 
     Args:
-        gra ([type]): [description]
+        gra (nx.Graph): [description]
         weight (MutableSequence): [description]
         coverset (set): [description]
 
     Returns:
         Union[int, float]: [description]
     """
+    if coverset is None:
+        coverset = set()
+
     total_dual_cost = 0  # for assertion
     total_primal_cost = 0
     gap = copy.copy(weight)

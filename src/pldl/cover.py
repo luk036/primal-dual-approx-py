@@ -61,6 +61,57 @@ def min_vertex_cover(hgr, weight, coverset):
         raise NotImplementedError
 
 
+def min_cycle_cover(gra, weight, covered):
+    """Perform minimum cycle cover using primal-dual
+    approximation algorithm
+
+    Args:
+        gra ([type]): [description]
+        weight ([type]): [description]
+        covered ([type]): [description]
+    """
+
+    def find_cycle():
+        for info, parent, child in _generic_bfs_cycle(gra, covered):
+            return _construct_cycle(info, parent, child)
+
+    def violate():
+        while True:
+            S = find_cycle()
+            if S is None:
+                break
+            yield S
+
+    return pd_cover(violate, weight, covered)
+
+
+def min_odd_cycle_cover(gra, weight, covered):
+    """Perform minimum odd cycle cover using primal-dual
+    approximation algorithm
+
+    Args:
+        gra ([type]): [description]
+        weight ([type]): [description]
+        covered ([type]): [description]
+    """
+
+    def find_odd_cycle():
+        for info, parent, child in _generic_bfs_cycle(gra, covered):
+            _, depth_child = info[child]
+            _, depth_parent = info[parent]
+            if (depth_parent - depth_child) % 2 == 0:
+                return _construct_cycle(info, parent, child)
+
+    def violate():
+        while True:
+            S = find_odd_cycle()
+            if S is None:
+                break
+            yield S
+
+    return pd_cover(violate, weight, covered)
+
+
 def _construct_cycle(info, parent, child):
     """[summary]
 
@@ -118,54 +169,3 @@ def _generic_bfs_cycle(gra, covered):
                     continue
                 # cycle found
                 yield info, parent, child
-
-
-def min_cycle_cover(gra, weight, covered):
-    """Perform minimum cycle cover using primal-dual
-    approximation algorithm
-
-    Args:
-        gra ([type]): [description]
-        weight ([type]): [description]
-        covered ([type]): [description]
-    """
-
-    def find_cycle():
-        for info, parent, child in _generic_bfs_cycle(gra, covered):
-            return _construct_cycle(info, parent, child)
-
-    def violate():
-        while True:
-            S = find_cycle()
-            if S is None:
-                break
-            yield S
-
-    return pd_cover(violate, weight, covered)
-
-
-def min_odd_cycle_cover(gra, weight, covered):
-    """Perform minimum odd cycle cover using primal-dual
-    approximation algorithm
-
-    Args:
-        gra ([type]): [description]
-        weight ([type]): [description]
-        covered ([type]): [description]
-    """
-
-    def find_odd_cycle():
-        for info, parent, child in _generic_bfs_cycle(gra, covered):
-            _, depth_child = info[child]
-            _, depth_parent = info[parent]
-            if (depth_parent - depth_child) % 2 == 0:
-                return _construct_cycle(info, parent, child)
-
-    def violate():
-        while True:
-            S = find_odd_cycle()
-            if S is None:
-                break
-            yield S
-
-    return pd_cover(violate, weight, covered)
