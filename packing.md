@@ -43,8 +43,7 @@
 
 Given:
 - A netlist contains n L's and m F's.
-- A grid of C's, each of them can pick
-  exactly one L and one F.
+- A grid of C's, each of them can pick exactly one L and one F.
 
 ---
 
@@ -75,8 +74,7 @@ Choices:
 
 Given:
 - A netlist contains n L's, m F's, and p Q's.
-- A grid of C's, each of them can pick
-  exactly one L, one F, and one Q.
+- A grid of C's, each of them can pick exactly one L, one F, and one Q.
 
 Possible solution:
 - Two-stage approach:
@@ -89,8 +87,7 @@ Possible solution:
 
 Given:
 - A netlist contains n L's and m F's.
-- A grid of C's, each of them can pick
-  exactly **two** L's and one F.
+- A grid of C's, each of them can pick exactly **two** L's and one F.
 
 Possible solution:
 - Two-stage approach:

@@ -1,21 +1,20 @@
-# ☯ Primal-dual approximation algorithms
+# ☯ Primal-dual approximation algorithms (2)
 
 @luk036
 
 ---
 
-## Vertex Cover
+## Example: Vertex Cover
 
 - Instance: G = (V, E) 
-- Solution: A vertex cover for G, i.e., a subset U 
-  such that, for each edge (u,v) ∈ E, at least one of 
-  u and v belongs to U
+- Solution: A vertex cover for G, i.e., a subset U such that, for each edge (u,v) ∈ E, at least one of u and v belongs to U
 - Measure: Cardinality of the vertex cover, i.e. ∣U∣
 
 ---
 
 ## Greedy-Vertex-Cover
 
+```
 ┌─┬─────────────────────────────────────────┐
 │1│U = {}                                   │
 │2│do chose v in V with max. degree         │
@@ -24,10 +23,11 @@
 │5│until all edges covered                  │
 │6│return U                                 │
 └─┴─────────────────────────────────────────┘
+```
 
 Requirements:
 
-- Need a heap to maintain max. degree
+- Need a (bucket) heap to maintain max. degree
 - Only for unweighted problems.
 
 ---
@@ -92,7 +92,7 @@ Requirements:
            ‾‾‾          
         e∈adj(v)
 
-        y  ≥ 0, ∀ e ∈ E.
-         e              
+            y  ≥ 0, ∀ e ∈ E.
+             e              
 ```
 
