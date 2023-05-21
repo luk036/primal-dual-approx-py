@@ -16,14 +16,14 @@
 
 ## Greedy-Vertex-Cover
 
-```
-1. U = {}
-2. do chose v in V with max. degree
-3.     U = U + {v}
-4.     remove v and every edge adjacent to v
-5. until all edges covered
-6. return U
-```
+┌─┬─────────────────────────────────────────┐
+│1│U = {}                                   │
+│2│do chose v in V with max. degree         │
+│3│    U = U + {v}                          │
+│4│    remove v and every edge adjacent to v│
+│5│until all edges covered                  │
+│6│return U                                 │
+└─┴─────────────────────────────────────────┘
 
 Requirements:
 
