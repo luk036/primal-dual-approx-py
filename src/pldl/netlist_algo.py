@@ -1,20 +1,25 @@
 """
 Minimum vertex cover for weighted netlist.
 """
-from .netlist import Netlist
 import copy
-from typing import Union, Set
-from collections.abc import MutableSequence
+from typing import Union, Set, Tuple, Optional
+from collections.abc import MutableMapping
 
 def min_maximal_matching(
-    hgr: Netlist, weight: MutableSequence, matchset: Set, dep: Set
-) -> Union[int, float]:
+    hgr, weight: MutableMapping, matchset: Optional[Set] = None,
+    dep: Optional[Set] = None
+) -> Tuple[Set, Union[int, float]]:
     """Perform minimum weighted maximal matching using primal-dual
     approximation algorithm
 
     Returns:
         [type]: [description]
     """
+    if matchset is None:
+        matchset = set()
+    if dep is None:
+        dep = set()
+
     def cover(net):
         for vtx in hgr.gra[net]:
             dep.add(vtx)
@@ -55,4 +60,4 @@ def min_maximal_matching(
                 gap[net2] -= min_val
 
     assert total_dual_cost <= total_primal_cost
-    return total_primal_cost
+    return matchset, total_primal_cost

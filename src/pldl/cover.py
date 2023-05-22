@@ -1,18 +1,19 @@
 from collections import deque
-import networkx as nx
+# import networkx as nx
 import copy
-from .netlist import Netlist
-
-from typing import Callable, Union, Set
-from collections.abc import MutableSequence
+# from .netlist import Netlist
+from typing import Generator
+from typing import Set, Callable, Union, Optional, Tuple, Deque
+from collections.abc import MutableMapping
 
 def pd_cover(
-    violate: Callable, weight: MutableSequence, soln: Set) -> Union[int, float]:
+    violate: Callable, weight: MutableMapping, soln: Set
+) -> Tuple[Set, Union[int, float]]:
     """Perform primal-dual approximation algorithm for covering problems
 
     Args:
         violate (Callable): an oracle for return a set of violate elements
-        weight (MutableSequence): the weight of element
+        weight (MutableMapping): the weight of element
         soln ([type]): solution set
 
     Returns:
@@ -30,89 +31,108 @@ def pd_cover(
         for vtx in S:
             gap[vtx] -= min_val
     assert total_dual_cost <= total_primal_cost
-    return total_primal_cost
+    return soln, total_primal_cost
 
 
-def min_vertex_cover(hgr, weight, coverset):
+def min_vertex_cover(gra, weight: MutableMapping, coverset: Optional[Set]=None
+) -> Tuple[Set, Union[int, float]]:
     """Perform minimum weighted vertex cover using primal-dual
     approximation algorithm
 
     Returns:
         [type]: [description]
     """
+    if coverset is None:
+        coverset = set()
 
-    def violate_netlist():
+    def violate_graph() -> Generator:
+        for utx, vtx in gra.edges():
+            if utx in coverset or vtx in coverset:
+                continue
+            yield [utx, vtx]
+
+    return pd_cover(violate_graph, weight, coverset)
+
+
+def min_hyper_vertex_cover(hgr, weight: MutableMapping, coverset: Optional[Set]=None
+) -> Tuple[Set, Union[int, float]]:
+    """Perform minimum weighted vertex cover using primal-dual
+    approximation algorithm
+
+    Returns:
+        [type]: [description]
+    """
+    if coverset is None:
+        coverset = set()
+
+    def violate_netlist() -> Generator:
         for net in hgr.nets:
             if any(vtx in coverset for vtx in hgr.gra[net]):
                 continue
             yield hgr.gra[net]
 
-    def violate_graph():
-        for utx, vtx in hgr.edges():
-            if utx in coverset or vtx in coverset:
-                continue
-            yield [utx, vtx]
-
-    if isinstance(hgr, Netlist):
-        return pd_cover(violate_netlist, weight, coverset)
-    elif isinstance(hgr, nx.Graph):
-        return pd_cover(violate_graph, weight, coverset)
-    else:
-        raise NotImplementedError
+    return pd_cover(violate_netlist, weight, coverset)
 
 
-def min_cycle_cover(gra, weight, covered):
+def min_cycle_cover(gra, weight: MutableMapping, coverset: Optional[Set]=None
+) -> Tuple[Set, Union[int, float]]:
     """Perform minimum cycle cover using primal-dual
     approximation algorithm
 
     Args:
         gra ([type]): [description]
         weight ([type]): [description]
-        covered ([type]): [description]
+        coverset ([type]): [description]
     """
+    if coverset is None:
+        coverset = set()
 
     def find_cycle():
-        for info, parent, child in _generic_bfs_cycle(gra, covered):
+        for info, parent, child in _generic_bfs_cycle(gra, coverset):
             return _construct_cycle(info, parent, child)
 
-    def violate():
+    def violate() -> Generator:
         while True:
             S = find_cycle()
             if S is None:
                 break
             yield S
 
-    return pd_cover(violate, weight, covered)
+    return pd_cover(violate, weight, coverset)
 
 
-def min_odd_cycle_cover(gra, weight, covered):
+def min_odd_cycle_cover(gra, weight: MutableMapping, coverset: Optional[Set]=None
+) -> Tuple[Set, Union[int, float]]:
     """Perform minimum odd cycle cover using primal-dual
     approximation algorithm
 
     Args:
         gra ([type]): [description]
         weight ([type]): [description]
-        covered ([type]): [description]
+        coverset ([type]): [description]
     """
+    if coverset is None:
+        coverset = set()
+
 
     def find_odd_cycle():
-        for info, parent, child in _generic_bfs_cycle(gra, covered):
+        for info, parent, child in _generic_bfs_cycle(gra, coverset):
             _, depth_child = info[child]
             _, depth_parent = info[parent]
             if (depth_parent - depth_child) % 2 == 0:
                 return _construct_cycle(info, parent, child)
 
-    def violate():
+    def violate() -> Generator:
         while True:
             S = find_odd_cycle()
             if S is None:
                 break
             yield S
 
-    return pd_cover(violate, weight, covered)
+    return pd_cover(violate, weight, coverset)
 
 
-def _construct_cycle(info, parent, child):
+def _construct_cycle(info, parent, child) -> Deque:
     """[summary]
 
     Args:
@@ -131,7 +151,7 @@ def _construct_cycle(info, parent, child):
     else:
         node_a, depth_a = child, depth_child
         node_b, depth_b = parent, depth_now
-    S = deque()
+    S: Deque = deque()
     while depth_a < depth_b:
         S.append(node_a)
         node_a, depth_a = info[node_a]
@@ -145,13 +165,13 @@ def _construct_cycle(info, parent, child):
     return S
 
 
-def _generic_bfs_cycle(gra, covered):
+def _generic_bfs_cycle(gra, coverset) -> Generator:
     depth_limit = len(gra)
     neighbors = gra.neighbors
     nodelist = list(gra.nodes())
     # random.shuffle(nodelist)
     for source in nodelist:
-        if source in covered:
+        if source in coverset:
             continue
         info = {source: (source, depth_limit)}
         queue = deque([source])
@@ -159,7 +179,7 @@ def _generic_bfs_cycle(gra, covered):
             parent = queue.popleft()
             succ, depth_now = info[parent]
             for child in neighbors(parent):
-                if child in covered:
+                if child in coverset:
                     continue
                 if child not in info:
                     info[child] = (parent, depth_now - 1)

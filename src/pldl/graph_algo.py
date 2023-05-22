@@ -3,20 +3,19 @@
 Minimum vertex cover for weighed graphs.
 1. Support Lazy evalution
 """
-import networkx as nx
-from typing import Union, Set, Optional
-from collections.abc import MutableSequence
+from typing import Set, Union, Tuple, Optional
+from collections.abc import MutableMapping
 import copy
 
 def min_vertex_cover_fast(
-    gra: nx.Graph, weight: MutableSequence, coverset: Optional[Set]=None
-) -> Union[int, float]:
+    gra, weight: MutableMapping, coverset: Optional[Set]=None
+) -> Tuple[Set, Union[int, float]]:
     """Perform minimum weighted vertex cover using primal-dual
     approximation algorithm
 
     Args:
         gra (nx.Graph): [description]
-        weight (MutableSequence): [description]
+        weight (MutableMapping): [description]
         coverset (set): [description]
 
     Returns:
@@ -29,35 +28,41 @@ def min_vertex_cover_fast(
     total_primal_cost = 0
     gap = copy.copy(weight)
 
-    for utx in gra:
-        for vtx in gra[utx]:
-            if utx in coverset or vtx in coverset:
-                continue
-            if gap[utx] < gap[vtx]:
-                utx, vtx = vtx, utx  # swap
-            coverset.add(vtx)
-            total_dual_cost += gap[vtx]
-            total_primal_cost += weight[vtx]
-            gap[utx] -= gap[vtx]
-            gap[vtx] = 0
+    for utx, vtx in gra.edges():
+        if utx in coverset or vtx in coverset:
+            continue
+        if gap[utx] < gap[vtx]:
+            utx, vtx = vtx, utx  # swap
+        coverset.add(vtx)
+        total_dual_cost += gap[vtx]
+        total_primal_cost += weight[vtx]
+        gap[utx] -= gap[vtx]
+        gap[vtx] = 0
 
     assert total_dual_cost <= total_primal_cost
-    return total_primal_cost
+    return coverset, total_primal_cost
 
 
-def min_maximal_independant_set(gra, weight: MutableSequence, indset: Set,
-                                dep: Set) -> Union[int, float]:
+def min_maximal_independant_set(
+    gra, weight: MutableMapping, indset: Optional[Set]=None,
+    dep: Optional[Set]=None
+) -> Tuple[Set, Union[int, float]]:
     """Perform minimum weighted maximal independant using primal-dual
 
     Args:
         gra (nx.Graph): a undirected graph
-        weight (MutableSequence): weight of vertex
+        weight (MutableMapping): weight of vertex
         indset (set): [description]
         dep (set): [description]
 
     Returns:
         Union[int, float]: total primal cost
     """
+    if indset is None:
+        indset = set()
+    if dep is None:
+        dep = set()
+
     def coverset(utx):
         dep.add(utx)
         for vtx in gra[utx]:
@@ -90,4 +95,4 @@ def min_maximal_independant_set(gra, weight: MutableSequence, indset: Set,
             gap[vtx] -= min_val
 
     assert total_dual_cost <= total_primal_cost
-    return total_primal_cost
+    return indset, total_primal_cost
