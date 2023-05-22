@@ -7,8 +7,9 @@ from typing import Set, Union, Tuple, Optional
 from collections.abc import MutableMapping
 import copy
 
+
 def min_vertex_cover_fast(
-    gra, weight: MutableMapping, coverset: Optional[Set]=None
+    gra, weight: MutableMapping, coverset: Optional[Set] = None
 ) -> Tuple[Set, Union[int, float]]:
     """Perform minimum weighted vertex cover using primal-dual
     approximation algorithm
@@ -44,8 +45,8 @@ def min_vertex_cover_fast(
 
 
 def min_maximal_independant_set(
-    gra, weight: MutableMapping, indset: Optional[Set]=None,
-    dep: Optional[Set]=None
+    gra, weight: MutableMapping, indset: Optional[Set] = None,
+    dep: Optional[Set] = None
 ) -> Tuple[Set, Union[int, float]]:
     """Perform minimum weighted maximal independant using primal-dual
 

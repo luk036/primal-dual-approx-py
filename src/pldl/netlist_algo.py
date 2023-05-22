@@ -5,6 +5,7 @@ import copy
 from typing import Union, Set, Tuple, Optional
 from collections.abc import MutableMapping
 
+
 def min_maximal_matching(
     hgr, weight: MutableMapping, matchset: Optional[Set] = None,
     dep: Optional[Set] = None

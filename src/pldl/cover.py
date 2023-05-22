@@ -6,6 +6,7 @@ from typing import Generator
 from typing import Set, Callable, Union, Optional, Tuple, Deque
 from collections.abc import MutableMapping
 
+
 def pd_cover(
     violate: Callable, weight: MutableMapping, soln: Set
 ) -> Tuple[Set, Union[int, float]]:
@@ -34,7 +35,8 @@ def pd_cover(
     return soln, total_primal_cost
 
 
-def min_vertex_cover(gra, weight: MutableMapping, coverset: Optional[Set]=None
+def min_vertex_cover(
+    gra, weight: MutableMapping, coverset: Optional[Set] = None
 ) -> Tuple[Set, Union[int, float]]:
     """Perform minimum weighted vertex cover using primal-dual
     approximation algorithm
@@ -54,7 +56,8 @@ def min_vertex_cover(gra, weight: MutableMapping, coverset: Optional[Set]=None
     return pd_cover(violate_graph, weight, coverset)
 
 
-def min_hyper_vertex_cover(hgr, weight: MutableMapping, coverset: Optional[Set]=None
+def min_hyper_vertex_cover(
+    hgr, weight: MutableMapping, coverset: Optional[Set] = None
 ) -> Tuple[Set, Union[int, float]]:
     """Perform minimum weighted vertex cover using primal-dual
     approximation algorithm
@@ -74,8 +77,8 @@ def min_hyper_vertex_cover(hgr, weight: MutableMapping, coverset: Optional[Set]=
     return pd_cover(violate_netlist, weight, coverset)
 
 
-def min_cycle_cover(gra, weight: MutableMapping, coverset: Optional[Set]=None
-) -> Tuple[Set, Union[int, float]]:
+def min_cycle_cover(gra, weight: MutableMapping, coverset: Optional[Set] = None
+                    ) -> Tuple[Set, Union[int, float]]:
     """Perform minimum cycle cover using primal-dual
     approximation algorithm
 
@@ -101,7 +104,8 @@ def min_cycle_cover(gra, weight: MutableMapping, coverset: Optional[Set]=None
     return pd_cover(violate, weight, coverset)
 
 
-def min_odd_cycle_cover(gra, weight: MutableMapping, coverset: Optional[Set]=None
+def min_odd_cycle_cover(
+    gra, weight: MutableMapping, coverset: Optional[Set] = None
 ) -> Tuple[Set, Union[int, float]]:
     """Perform minimum odd cycle cover using primal-dual
     approximation algorithm
@@ -113,7 +117,6 @@ def min_odd_cycle_cover(gra, weight: MutableMapping, coverset: Optional[Set]=Non
     """
     if coverset is None:
         coverset = set()
-
 
     def find_odd_cycle():
         for info, parent, child in _generic_bfs_cycle(gra, coverset):
