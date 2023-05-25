@@ -1,4 +1,3 @@
-
 from pldl.netlist import create_drawf, create_test_netlist
 
 
@@ -29,26 +28,28 @@ def test_drawf():
 def test_json():
     from networkx.readwrite import json_graph
     import json
+
     hgr = create_drawf()
     data = json_graph.node_link_data(hgr.gra)
-    with open('testcases/drawf.json', 'w') as fw:
+    with open("testcases/drawf.json", "w") as fw:
         json.dump(data, fw, indent=1)
-    with open('testcases/drawf.json', 'r') as fr:
+    with open("testcases/drawf.json", "r") as fr:
         data2 = json.load(fr)
     gra = json_graph.node_link_graph(data2)
     assert gra.number_of_nodes() == 13
-    assert gra.graph['num_modules'] == 7
-    assert gra.graph['num_nets'] == 6
-    assert gra.graph['num_pads'] == 3
+    assert gra.graph["num_modules"] == 7
+    assert gra.graph["num_nets"] == 6
+    assert gra.graph["num_pads"] == 3
 
 
 def test_json2():
     from networkx.readwrite import json_graph
     import json
-    with open('testcases/p1.json', 'r') as fr:
+
+    with open("testcases/p1.json", "r") as fr:
         data = json.load(fr)
     gra = json_graph.node_link_graph(data)
     assert gra.number_of_nodes() == 1735
-    assert gra.graph['num_modules'] == 833
-    assert gra.graph['num_nets'] == 902
-    assert gra.graph['num_pads'] == 81
+    assert gra.graph["num_modules"] == 833
+    assert gra.graph["num_nets"] == 902
+    assert gra.graph["num_pads"] == 81

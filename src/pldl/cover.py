@@ -1,6 +1,8 @@
 from collections import deque
+
 # import networkx as nx
 import copy
+
 # from .netlist import Netlist
 from typing import Generator
 from typing import Set, Callable, Union, Optional, Tuple, Deque
@@ -77,8 +79,9 @@ def min_hyper_vertex_cover(
     return pd_cover(violate_netlist, weight, coverset)
 
 
-def min_cycle_cover(gra, weight: MutableMapping, coverset: Optional[Set] = None
-                    ) -> Tuple[Set, Union[int, float]]:
+def min_cycle_cover(
+    gra, weight: MutableMapping, coverset: Optional[Set] = None
+) -> Tuple[Set, Union[int, float]]:
     """Perform minimum cycle cover using primal-dual
     approximation algorithm
 
