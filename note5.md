@@ -31,11 +31,11 @@
            ╱    e    
            ‾‾‾          
          e∈adj(v)
-                    ___         
-            x  +    ╲     x  ≥ 1,   ∀ e ∈ E,
-             e      ╱      f    
-                    ‾‾‾         
-                 f∈adj(e)       
+                    ___     ___         
+            x  +    ╲       ╲    x  ≥ 1,   ∀ e ∈ E,
+             e      ╱       ╱     f    
+                    ‾‾‾     ‾‾‾         
+                 v∈adj(e) f∈adj(v)      
 
             x  ∈ {0, 1}, ∀ v ∈ V.      
              v 
@@ -56,11 +56,11 @@
            ╱    e    
            ‾‾‾          
          e∈adj(v)
-                    ___         
-            x  +    ╲     x  ≥ 1,   ∀ e ∈ E,
-             e      ╱      f    
-                    ‾‾‾         
-                 f∈adj(e)       
+                    ___     ___         
+            x  +    ╲       ╲    x  ≥ 1,   ∀ e ∈ E,
+             e      ╱       ╱     f    
+                    ‾‾‾     ‾‾‾         
+                 v∈adj(e) f∈adj(v)      
 
             0 ≤ x  ≤ 1, ∀ v ∈ V.
                  v    
@@ -71,17 +71,21 @@
 ## Dual LP of LP Relaxation
 
 ```
-            ⎛___   ⎞    
-    max     ⎜╲   y ⎟    
-            ⎜╱    c⎟    
-            ⎜‾‾‾   ⎟    
-            ⎝c∈C   ⎠    
-           ___          
-    s.t.   ╲   y  ≤ w , ∀ v ∈ V,
-           ╱    c    v
-           ‾‾‾          
-          c: v∈c
+            ___        ___         
+    max     ╲   y  -   ╲    z  
+            ╱    e     ╱     v    
+            ‾‾‾        ‾‾‾         
+            e∈E        v∈V      
 
-            y  ≥ 0, ∀ c ∈ C.
-             c              
+               ___ ⎛       ___     ⎞    
+    s.t.   y + ╲   ⎜-z  +  ╲    y  ⎟  ≤ w ,   ∀ e ∈ E,
+            e  ╱   ⎜  v    ╱     f ⎟     e
+               ‾‾‾ ⎝       ‾‾‾     ⎠    
+             v∈adj(e)   f∈adj(v)      
+
+            y  ≥ 0, ∀ e ∈ E.
+             e              
+
+            z  ≥ 0, ∀ v ∈ V.
+             v              
 ```
