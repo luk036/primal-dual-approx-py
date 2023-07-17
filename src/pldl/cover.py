@@ -6,7 +6,7 @@ import copy
 # from .netlist import Netlist
 from typing import Generator
 from typing import Set, Callable, Union, Optional, Tuple, Deque
-from collections.abc import MutableMapping
+from typing import MutableMapping
 
 
 def pd_cover(

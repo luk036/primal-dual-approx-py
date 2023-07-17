@@ -4,7 +4,7 @@ Minimum vertex cover for weighed graphs.
 1. Support Lazy evalution
 """
 from typing import Set, Union, Tuple, Optional
-from collections.abc import MutableMapping
+from typing import MutableMapping
 import copy
 
 
