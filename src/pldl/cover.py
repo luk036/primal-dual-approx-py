@@ -1,6 +1,6 @@
 from collections import deque
 
-# import networkx as nx
+import networkx as nx
 import copy
 
 # from .netlist import Netlist
@@ -21,6 +21,17 @@ def pd_cover(
 
     Returns:
         Union[int, float]: total primal cost
+
+    Examples:
+        >>> def violate_graph() -> Generator:
+        ...     yield [0, 1]
+        ...     yield [0, 2]
+        ...     yield [1, 2]
+        >>> weight = {0: 1, 1: 2, 2: 3}
+        >>> soln = set()
+        >>> pd_cover(violate_graph, weight, soln)
+        ({0, 1}, 4)
+    
     """
     total_primal_cost = 0
     total_dual_cost = 0
@@ -38,22 +49,31 @@ def pd_cover(
 
 
 def min_vertex_cover(
-    gra, weight: MutableMapping, coverset: Optional[Set] = None
+    gra: nx.Graph, weight: MutableMapping, coverset: Optional[Set] = None
 ) -> Tuple[Set, Union[int, float]]:
     """Perform minimum weighted vertex cover using primal-dual
     approximation algorithm
 
     Returns:
         [type]: [description]
+
+    Examples:
+        >>> gra = nx.Graph()
+        >>> gra.add_edges_from([(0, 1), (0, 2), (1, 2), (1, 3), (2, 3), (2, 4), (3, 4)])
+        >>> weight = {0: 1, 1: 1, 2: 1, 3: 1, 4: 1}
+        >>> soln = set()
+        >>> min_vertex_cover(gra, weight, soln)
+        ({0, 1, 2, 3, 4}, 5)
+    
     """
     if coverset is None:
         coverset = set()
 
     def violate_graph() -> Generator:
-        for utx, vtx in gra.edges():
-            if utx in coverset or vtx in coverset:
+        for vtx in gra:
+            if vtx in coverset:
                 continue
-            yield [utx, vtx]
+            yield [vtx]
 
     return pd_cover(violate_graph, weight, coverset)
 
@@ -80,7 +100,7 @@ def min_hyper_vertex_cover(
 
 
 def min_cycle_cover(
-    gra, weight: MutableMapping, coverset: Optional[Set] = None
+    gra: nx.Graph, weight: MutableMapping, coverset: Optional[Set] = None
 ) -> Tuple[Set, Union[int, float]]:
     """Perform minimum cycle cover using primal-dual
     approximation algorithm
@@ -89,6 +109,15 @@ def min_cycle_cover(
         gra ([type]): [description]
         weight ([type]): [description]
         coverset ([type]): [description]
+
+    Examples:
+        >>> gra = nx.Graph()
+        >>> gra.add_edges_from([(0, 1), (0, 2), (1, 2), (1, 3), (2, 3), (2, 4), (3, 4)])
+        >>> weight = {0: 1, 1: 1, 2: 1, 3: 1, 4: 1}
+        >>> soln = set()
+        >>> min_cycle_cover(gra, weight, soln)
+        ({0, 1, 2}, 3)
+    
     """
     if coverset is None:
         coverset = set()
@@ -108,7 +137,7 @@ def min_cycle_cover(
 
 
 def min_odd_cycle_cover(
-    gra, weight: MutableMapping, coverset: Optional[Set] = None
+    gra: nx.Graph, weight: MutableMapping, coverset: Optional[Set] = None
 ) -> Tuple[Set, Union[int, float]]:
     """Perform minimum odd cycle cover using primal-dual
     approximation algorithm
@@ -117,6 +146,15 @@ def min_odd_cycle_cover(
         gra ([type]): [description]
         weight ([type]): [description]
         coverset ([type]): [description]
+
+    Examples:
+        >>> gra = nx.Graph()
+        >>> gra.add_edges_from([(0, 1), (0, 2), (1, 2), (1, 3), (2, 3), (2, 4), (3, 4)])
+        >>> weight = {0: 1, 1: 1, 2: 1, 3: 1, 4: 1}
+        >>> soln = set()
+        >>> min_odd_cycle_cover(gra, weight, soln)
+        ({0, 1, 2}, 3)
+    
     """
     if coverset is None:
         coverset = set()
@@ -125,17 +163,10 @@ def min_odd_cycle_cover(
         for info, parent, child in _generic_bfs_cycle(gra, coverset):
             _, depth_child = info[child]
             _, depth_parent = info[parent]
-            if (depth_parent - depth_child) % 2 == 0:
+            if (depth_parent - depth_child) % 2 == 1:
                 return _construct_cycle(info, parent, child)
 
-    def violate() -> Generator:
-        while True:
-            S = find_odd_cycle()
-            if S is None:
-                break
-            yield S
-
-    return pd_cover(violate, weight, coverset)
+    return pd_cover(find_odd_cycle, weight, coverset)
 
 
 def _construct_cycle(info, parent, child) -> Deque:

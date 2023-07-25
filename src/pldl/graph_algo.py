@@ -21,6 +21,17 @@ def min_vertex_cover_fast(
 
     Returns:
         Union[int, float]: [description]
+
+    Examples:
+        >>> import networkx as nx
+        >>> from pldl.graph_algo import min_vertex_cover_fast
+        >>> gra = nx.Graph()
+        >>> gra.add_edges_from([(0, 1), (0, 2), (1, 2), (1, 3), (2, 3), (2, 4), (3, 4)])
+        >>> weight = {0: 1, 1: 1, 2: 1, 3: 1, 4: 1}
+        >>> coverset = set()
+        >>> min_vertex_cover_fast(gra, weight, coverset)
+        ({0, 1, 2, 3}, 4)
+    
     """
     if coverset is None:
         coverset = set()
@@ -57,6 +68,19 @@ def min_maximal_independant_set(
 
     Returns:
         Union[int, float]: total primal cost
+
+    Examples:
+        >>> import networkx as nx
+        >>> from pldl.graph_algo import min_maximal_independant_set
+        >>> gra = nx.Graph()
+        >>> gra.add_edges_from([(0, 1), (0, 2), (1, 2), (1, 3), (2, 3), (2, 4), (3, 4)])
+        >>> weight = {0: 1, 1: 1, 2: 1, 3: 1, 4: 1}
+        >>> indset = set()
+        >>> dep = set()
+        >>> min_maximal_independant_set(gra, weight, indset, dep)
+        ({0, 3}, 2)
+    
+    
     """
     if indset is None:
         indset = set()
