@@ -1,6 +1,10 @@
 [![Documentation Status](https://readthedocs.org/projects/primal-dual-approx-py/badge/?version=latest)](https://primal-dual-approx-py.readthedocs.io/en/latest/?badge=latest)
 [![codecov](https://codecov.io/gh/luk036/primal-dual-approx-py/branch/main/graph/badge.svg?token=2RACXYWU6K)](https://codecov.io/gh/luk036/primal-dual-approx-py)
 
+<p align="center">
+  <img src="./primal-dual-algorithmic-paradigm-ying-yang.svg"/>
+</p>
+
 # ☯ primal-dual-approx-py
 
 Approximation algorithms based-on primal-dual thinking
