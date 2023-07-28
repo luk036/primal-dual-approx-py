@@ -31,7 +31,6 @@ def min_vertex_cover_fast(
         >>> coverset = set()
         >>> min_vertex_cover_fast(gra, weight, coverset)
         ({0, 1, 2, 3}, 4)
-    
     """
     if coverset is None:
         coverset = set()

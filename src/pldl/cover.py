@@ -31,7 +31,6 @@ def pd_cover(
         >>> soln = set()
         >>> pd_cover(violate_graph, weight, soln)
         ({0, 1}, 4)
-    
     """
     total_primal_cost = 0
     total_dual_cost = 0
@@ -63,17 +62,16 @@ def min_vertex_cover(
         >>> weight = {0: 1, 1: 1, 2: 1, 3: 1, 4: 1}
         >>> soln = set()
         >>> min_vertex_cover(gra, weight, soln)
-        ({0, 1, 2, 3, 4}, 5)
-    
+        ({0, 1, 2, 3}, 4)
     """
     if coverset is None:
         coverset = set()
 
     def violate_graph() -> Generator:
-        for vtx in gra:
-            if vtx in coverset:
+        for utx, vtx in gra.edges():
+            if utx in coverset or vtx in coverset:
                 continue
-            yield [vtx]
+            yield [utx, vtx]
 
     return pd_cover(violate_graph, weight, coverset)
 
@@ -117,7 +115,6 @@ def min_cycle_cover(
         >>> soln = set()
         >>> min_cycle_cover(gra, weight, soln)
         ({0, 1, 2}, 3)
-    
     """
     if coverset is None:
         coverset = set()
@@ -154,7 +151,6 @@ def min_odd_cycle_cover(
         >>> soln = set()
         >>> min_odd_cycle_cover(gra, weight, soln)
         ({0, 1, 2}, 3)
-    
     """
     if coverset is None:
         coverset = set()
@@ -163,10 +159,17 @@ def min_odd_cycle_cover(
         for info, parent, child in _generic_bfs_cycle(gra, coverset):
             _, depth_child = info[child]
             _, depth_parent = info[parent]
-            if (depth_parent - depth_child) % 2 == 1:
+            if (depth_parent - depth_child) % 2 == 0:
                 return _construct_cycle(info, parent, child)
 
-    return pd_cover(find_odd_cycle, weight, coverset)
+    def violate() -> Generator:
+        while True:
+            S = find_odd_cycle()
+            if S is None:
+                break
+            yield S
+
+    return pd_cover(violate, weight, coverset)
 
 
 def _construct_cycle(info, parent, child) -> Deque:
