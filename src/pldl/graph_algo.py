@@ -78,8 +78,6 @@ def min_maximal_independant_set(
         >>> dep = set()
         >>> min_maximal_independant_set(gra, weight, indset, dep)
         ({0, 3}, 2)
-    
-    
     """
     if indset is None:
         indset = set()

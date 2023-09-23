@@ -17,15 +17,15 @@ __license__ = "mit"
 _logger = logging.getLogger(__name__)
 
 
-def run_MMM(hgr: Netlist):
+def run_MMM(hyprgraph: Netlist):
     mincost = 100000000000
     minpart = []
-    randseq = [randint(0, 1) for _ in range(hgr.number_of_modules())]
+    randseq = [randint(0, 1) for _ in range(hyprgraph.number_of_modules())]
 
-    if isinstance(hgr.modules, range):
+    if isinstance(hyprgraph.modules, range):
         part = randseq
-    elif isinstance(hgr.modules, list):
-        part = {vtx: k for vtx, k in zip(hgr.modules, randseq)}
+    elif isinstance(hyprgraph.modules, list):
+        part = {vtx: k for vtx, k in zip(hyprgraph.modules, randseq)}
     else:
         raise NotImplementedError
 
@@ -33,16 +33,16 @@ def run_MMM(hgr: Netlist):
     return mincost, minpart
 
 
-def plot(hgr: Netlist, p, solnset):
-    N = hgr.number_of_modules()
-    M = hgr.number_of_nets()
-    pos = nx.spring_layout(hgr.gra)
-    nx.draw_networkx_edges(hgr.gra, pos=pos, width=1)
+def plot(hyprgraph: Netlist, p, solnset):
+    N = hyprgraph.number_of_modules()
+    M = hyprgraph.number_of_nets()
+    pos = nx.spring_layout(hyprgraph.gra)
+    nx.draw_networkx_edges(hyprgraph.gra, pos=pos, width=1)
     nx.draw_networkx_nodes(
-        hgr.gra, nodelist=range(N, N + M), node_color="y", node_size=40, pos=pos
+        hyprgraph.gra, nodelist=range(N, N + M), node_color="y", node_size=40, pos=pos
     )
     nx.draw_networkx_nodes(
-        hgr.gra,
+        hyprgraph.gra,
         nodelist=list(p.keys()),
         node_size=list(p.values()),
         node_color=list(p.values()),
@@ -50,7 +50,7 @@ def plot(hgr: Netlist, p, solnset):
         pos=pos,
     )
     nx.draw_networkx_nodes(
-        hgr.gra, nodelist=solnset, node_size=40, node_color="c", pos=pos
+        hyprgraph.gra, nodelist=solnset, node_size=40, node_color="c", pos=pos
     )
     plt.show()
 
@@ -113,7 +113,7 @@ def setup_logging(loglevel):
         level=loglevel,
         stream=sys.stdout,
         format=logformat,
-        datefmt="%Y-%m-%d %hgr:%M:%S",
+        datefmt="%Y-%m-%d %hyprgraph:%M:%S",
     )
 
 
@@ -134,21 +134,21 @@ def main(args):
     if args.eta > 0.3:
         _logger.warning("eta value {} may be too big".format(args.eta))
 
-    hgr = create_random_graph(args.N, args.M, args.eta)
+    hyprgraph = create_random_graph(args.N, args.M, args.eta)
     p = dict()
-    for vtx in hgr.modules:
+    for vtx in hyprgraph.modules:
         p[vtx] = randint(50, 100)
     weight = dict()
-    for net in hgr.nets:
-        weight[net] = sum(p[vtx] for vtx in hgr.gra[net])
+    for net in hyprgraph.nets:
+        weight[net] = sum(p[vtx] for vtx in hyprgraph.gra[net])
 
     solnset = set()
     depset = set()
-    totalcost = min_maximal_matching(hgr, weight, solnset, depset)
+    totalcost = min_maximal_matching(hyprgraph, weight, solnset, depset)
     print("total cost = {}".format(totalcost))
 
     if args.plot:
-        plot(hgr, p, solnset)
+        plot(hyprgraph, p, solnset)
     _logger.info("Script ends here")
 
 
