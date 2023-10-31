@@ -15,7 +15,7 @@ def min_maximal_matching(
     """
     The `min_maximal_matching` function performs minimum weighted maximal matching using a primal-dual
     approximation algorithm.
-    
+
     :param hyprgraph: The `hyprgraph` parameter represents a hypergraph, which is a generalization of a
     graph where an edge can connect more than two vertices. It is not clear from the code snippet what
     the exact data structure of the hypergraph is, but it likely contains information about the vertices

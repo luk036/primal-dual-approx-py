@@ -13,7 +13,7 @@ def pd_cover(
 ) -> Tuple[Set, Union[int, float]]:
     """
     The function `pd_cover` implements a primal-dual approximation algorithm for covering problems.
-    
+
     :param violate: The `violate` parameter is a callable function or oracle that returns a set of
     violate elements. It is used to generate sets of elements that violate the current solution. Each
     set represents a potential improvement to the solution
@@ -57,7 +57,7 @@ def min_vertex_cover(
     """
     The `min_vertex_cover` function performs minimum weighted vertex cover using a primal-dual
     approximation algorithm.
-    
+
     :param gra: The parameter `gra` is a `nx.Graph` object, which represents the input graph. It is an
     undirected graph where each edge represents a connection between two vertices
     :type gra: nx.Graph
@@ -71,6 +71,16 @@ def min_vertex_cover(
     :return: The function `min_vertex_cover` returns a tuple containing two elements. The first element
     is a set representing the minimum weighted vertex cover, and the second element is either an integer
     or a float representing the weight of the minimum vertex cover.
+
+    .. svgbob::
+       :align: center
+
+        b  c  d  e
+        #--o--#--o
+        |  | /|     ({b, d, e}, 3)
+        o  |/ |
+        a  #--o
+           e  f
 
     Examples:
         >>> gra = nx.Graph()
@@ -98,7 +108,7 @@ def min_hyper_vertex_cover(
     """
     The `min_hyper_vertex_cover` function performs minimum weighted vertex cover using a primal-dual
     approximation algorithm.
-    
+
     :param hyprgraph: The `hyprgraph` parameter represents a hypergraph, which is a generalization of a
     graph where an edge can connect more than two vertices. It is likely represented as a data structure
     that contains information about the vertices and edges of the hypergraph
@@ -112,6 +122,19 @@ def min_hyper_vertex_cover(
     :return: The function `min_hyper_vertex_cover` returns a tuple containing two elements. The first
     element is a set representing the minimum weighted vertex cover, and the second element is either an
     integer or a float representing the weight of the vertex cover.
+
+    .. svgbob::
+       :align: center
+
+       a       b        e       g
+       o-------#-----*--o-------#
+                     |  |
+                  ,--)--'
+                  |  |      ({b, d, g, h}, 4)
+                  |  `--.
+                  |     |
+       o-------#--*-----o-------#
+       c       d        f       h
     """
     if coverset is None:
         coverset = set()
@@ -129,7 +152,7 @@ def _construct_cycle(info: Dict, parent, child) -> Deque:
     """
     The `_construct_cycle` function constructs a cycle by traversing the parent-child relationship in a
     dictionary.
-    
+
     :param info: The `info` parameter is a dictionary that contains information about the nodes in a
     graph. Each key in the dictionary represents a node, and the corresponding value is a tuple
     containing two elements: the parent node and the depth of the node
@@ -167,7 +190,7 @@ def min_cycle_cover(
     """
     The `min_cycle_cover` function performs minimum cycle cover using a primal-dual approximation
     algorithm.
-    
+
     :param gra: The `gra` parameter is a `nx.Graph` object representing the input graph. It contains the
     nodes and edges of the graph
     :type gra: nx.Graph
@@ -211,7 +234,7 @@ def _generic_bfs_cycle(gra: nx.Graph, coverset: Set) -> Generator:
     """
     The function `_generic_bfs_cycle` performs a breadth-first search on a graph to find cycles,
     excluding nodes in a given `coverset`.
-    
+
     :param gra: The parameter `gra` is a graph object that represents a directed graph. It should have a
     method `neighbors(node)` that returns the neighbors of a given node in the graph. The graph can be
     represented using any graph library or data structure that supports this method
@@ -248,7 +271,7 @@ def min_odd_cycle_cover(
     """
     The `min_odd_cycle_cover` function performs minimum odd cycle cover using a primal-dual
     approximation algorithm.
-    
+
     :param gra: The `gra` parameter is a `nx.Graph` object representing the input graph. It is used to
     define the graph structure and find cycles in the graph
     :type gra: nx.Graph

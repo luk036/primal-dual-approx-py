@@ -42,7 +42,7 @@ class Netlist:
         """
         The function initializes an object with a graph, modules, and nets, and calculates various
         properties of the graph and modules.
-        
+
         :param gra: The parameter `gra` is a graph object representing the connectivity between modules and
         nets. It is an instance of the `nx.Graph` class from the NetworkX library
         :type gra: nx.Graph
@@ -156,7 +156,9 @@ def read_json(filename):
     num_modules = gra.graph["num_modules"]
     num_nets = gra.graph["num_nets"]
     num_pads = gra.graph["num_pads"]
-    hyprgraph = Netlist(gra, range(num_modules), range(num_modules, num_modules + num_nets))
+    hyprgraph = Netlist(
+        gra, range(num_modules), range(num_modules, num_modules + num_nets)
+    )
     hyprgraph.num_pads = num_pads
     return hyprgraph
 

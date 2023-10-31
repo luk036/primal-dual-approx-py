@@ -22,6 +22,16 @@ def min_vertex_cover_fast(
     Returns:
         Union[int, float]: [description]
 
+    .. svgbob::
+       :align: center
+
+        b  c  d  e
+        #--o--#--o
+        |  | /|     ({b, d, e}, 3)
+        o  |/ |
+        a  #--o
+           e  f
+
     Examples:
         >>> import networkx as nx
         >>> from pldl.graph_algo import min_vertex_cover_fast
