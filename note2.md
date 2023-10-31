@@ -52,17 +52,17 @@ Requirements:
 ## ILP Formulation of Weighted Vertex Cover
 
 ```
-            ⎛___        ⎞
-    min     ⎜╲   w  ⋅ x ⎟
-            ⎜╱    v    v⎟
-            ⎜‾‾‾        ⎟
-            ⎝v∈V        ⎠
-                     
-    s.t.    x  + x  ≥ 1, ∀ (u, v) ∈ E      
-             u    v          
+             ___
+    min      ╲   w  ⋅ x
+             ╱    v    v
+             ‾‾‾
+             v∈V
+ 
+    s.t.    x  + x  ≥ 1, ∀ (u, v) ∈ E
+             u    v
 
-            x  ∈ {0, 1}, ∀ v ∈ V.      
-             v 
+            x  ∈ {0, 1}, ∀ v ∈ V.
+             v
 ```
 
 ---
