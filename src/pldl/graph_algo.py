@@ -67,7 +67,7 @@ def min_vertex_cover_fast(
 def min_maximal_independant_set(
     gra, weight: MutableMapping, indset: Optional[Set] = None, dep: Optional[Set] = None
 ) -> Tuple[Set, Union[int, float]]:
-    """Perform minimum weighted maximal independant using primal-dual
+    """Perform minimum weighted maximal independant set using primal-dual
 
     Args:
         gra (nx.Graph): a undirected graph
