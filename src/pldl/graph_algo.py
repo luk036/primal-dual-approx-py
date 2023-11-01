@@ -11,16 +11,27 @@ import copy
 def min_vertex_cover_fast(
     gra, weight: MutableMapping, coverset: Optional[Set] = None
 ) -> Tuple[Set, Union[int, float]]:
-    """Perform minimum weighted vertex cover using primal-dual
-    approximation algorithm
+    """
+    The `min_vertex_cover_fast` function performs minimum weighted vertex cover using a primal-dual
+    approximation algorithm (without post-processing).
+    
+    :param gra: gra is a NetworkX graph object representing the graph on which the minimum weighted
+    vertex cover algorithm will be performed. It contains the nodes and edges of the graph
 
-    Args:
-        gra (nx.Graph): [description]
-        weight (MutableMapping): [description]
-        coverset (set): [description]
+    :param weight: The `weight` parameter is a mutable mapping that represents the weight of each vertex
+    in the graph. It is used to determine the minimum weighted vertex cover. The keys of the mapping are
+    the vertices of the graph, and the values are the corresponding weights
 
-    Returns:
-        Union[int, float]: [description]
+    :type weight: MutableMapping
+
+    :param coverset: The `coverset` parameter is an optional set that represents the current vertex
+    cover. It is used to keep track of the vertices that are included in the cover. If no coverset is
+    provided, a new empty set is created
+
+    :type coverset: Optional[Set]
+
+    :return: The function `min_vertex_cover_fast` returns a tuple containing the vertex cover set and
+    the total weight of the vertex cover.
 
     .. svgbob::
        :align: center
@@ -67,16 +78,44 @@ def min_vertex_cover_fast(
 def min_maximal_independant_set(
     gra, weight: MutableMapping, indset: Optional[Set] = None, dep: Optional[Set] = None
 ) -> Tuple[Set, Union[int, float]]:
-    """Perform minimum weighted maximal independant set using primal-dual
+    r"""
+    The `min_maximal_independant_set` function performs minimum weighted maximal independent set using
+    primal-dual algorithm.
+    
+    :param gra: gra is an undirected graph represented using the NetworkX library. It represents the
+    graph structure and contains the vertices and edges of the graph
 
-    Args:
-        gra (nx.Graph): a undirected graph
-        weight (MutableMapping): weight of vertex
-        indset (set): [description]
-        dep (set): [description]
+    :param weight: The `weight` parameter is a dictionary-like object that assigns a weight to each
+    vertex in the graph. The keys of the dictionary represent the vertices, and the values represent
+    their corresponding weights
 
-    Returns:
-        Union[int, float]: total primal cost
+    :type weight: MutableMapping
+
+    :param indset: The `indset` parameter is a set that represents the current independent set. It is
+    initially set to `None` and is updated during the execution of the `min_maximal_independent_set`
+    function
+
+    :type indset: Optional[Set]
+
+    :param dep: The `dep` parameter is a set that represents the dependent vertices in the graph. These
+    are the vertices that are not included in the independent set and are adjacent to vertices in the
+    independent set. The `coverset` function is used to add a vertex and its adjacent vertices to the
+    dependent set
+
+    :type dep: Optional[Set]
+
+    :return: The function `min_maximal_independant_set` returns a tuple containing the minimum weighted
+    maximal independent set (indset) and the total primal cost (total_primal_cost).
+
+    .. svgbob::
+       :align: center
+
+       0  2
+       #--o
+       | /|\   ({0, 3}, 2)
+       |/ | \
+       o--#--o
+       1  3  4
 
     Examples:
         >>> import networkx as nx
