@@ -60,7 +60,7 @@ def pd_cover(
 def min_vertex_cover(
     gra: nx.Graph, weight: MutableMapping, coverset: Optional[Set] = None
 ) -> Tuple[Set, Union[int, float]]:
-    """
+    r"""
     The `min_vertex_cover` function performs minimum weighted vertex cover using a primal-dual
     approximation algorithm (without post-processing).
 
@@ -87,12 +87,12 @@ def min_vertex_cover(
     .. svgbob::
        :align: center
 
-        b  c  d  e
-        #--o--#--o
-        |  | /|     ({b, d, e}, 3)
-        o  |/ |
-        a  #--o
-           e  f
+        b     c     d     e
+        #-----o-----#-----o
+        |      \   / \       ({b, d, e}, 3)
+        |       \ /   \
+        o        #-----o
+        a        e     f
 
     Examples:
         >>> gra = nx.Graph()
