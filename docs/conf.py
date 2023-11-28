@@ -80,7 +80,7 @@ templates_path = ["_templates"]
 
 
 # Enable markdown
-extensions.append("myst_parser")
+# extensions.append("myst_parser")
 
 # Configure MyST-Parser
 myst_enable_extensions = [
@@ -245,7 +245,7 @@ html_static_path = ["_static"]
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "pldl-doc"
+htmlhelp_basename = "primal-dual-approx-py-doc"
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -262,7 +262,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-    ("index", "user_guide.tex", "pldl Documentation", "Wai-Shing Luk", "manual")
+    ("index", "user_guide.tex", "primal-dual-approx-py Documentation", "Wai-Shing Luk", "manual")
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
