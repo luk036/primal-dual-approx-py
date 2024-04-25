@@ -1,5 +1,5 @@
 """
-    Dummy conftest.py for primal_dual_approx_py.
+    Dummy conftest.py for pldl.
 
     If you don't know what this is for, just leave it empty.
     Read more about conftest.py under:

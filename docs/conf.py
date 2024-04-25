@@ -34,7 +34,7 @@ except ImportError:
     from sphinx import apidoc
 
 output_dir = os.path.join(__location__, "api")
-module_dir = os.path.join(__location__, "../src/pldl")
+module_dir = os.path.join(__location__, "../src/netlistx")
 try:
     shutil.rmtree(output_dir)
 except FileNotFoundError:
@@ -80,7 +80,7 @@ templates_path = ["_templates"]
 
 
 # Enable markdown
-# extensions.append("myst_parser")
+extensions.append("myst_parser")
 
 # Configure MyST-Parser
 myst_enable_extensions = [
@@ -106,7 +106,7 @@ source_suffix = [".rst", ".md"]
 master_doc = "index"
 
 # General information about the project.
-project = "pldl"
+project = "netlistx"
 copyright = "2023, Wai-Shing Luk"
 
 # The version info for the project you're documenting, acts as replacement for
@@ -118,7 +118,7 @@ copyright = "2023, Wai-Shing Luk"
 # If you don’t need the separation provided between version and release,
 # just set them both to the same value.
 try:
-    from pldl import __version__ as version
+    from netlistx import __version__ as version
 except ImportError:
     version = ""
 
@@ -135,7 +135,7 @@ release = version
 # non-false value, then it is used:
 # today = ''
 # Else, today_fmt is used as the format for a strftime call.
-# today_fmt = '%B %d, %Y'
+# today_fmt = '%mat_b %d, %Y'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -245,7 +245,7 @@ html_static_path = ["_static"]
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "primal-dual-approx-py-doc"
+htmlhelp_basename = "netlistx-doc"
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -262,7 +262,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-    ("index", "user_guide.tex", "primal-dual-approx-py Documentation", "Wai-Shing Luk", "manual")
+    ("index", "user_guide.tex", "netlistx Documentation", "Wai-Shing Luk", "manual")
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

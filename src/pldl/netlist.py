@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
-
 import json
 import random
-from typing import Dict, List, Set, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 import networkx as nx
+from mywheel.array_like import RepeatArray
+from mywheel.lict import Lict
 from networkx.algorithms import bipartite
 from networkx.readwrite import json_graph
 
@@ -32,40 +32,75 @@ class SimpleGraph(nx.Graph):
     node_attr_dict_factory = single_edge_dict
 
 
+# The TinyGraph class is a subclass of nx.Graph that initializes a graph with a specified number of
+# nodes and provides methods for creating node dictionaries and adjacency list dictionaries.
+class TinyGraph(nx.Graph):
+    num_nodes = 0
+
+    def cheat_node_dict(self):
+        return Lict([dict() for _ in range(self.num_nodes)])
+
+    def cheat_adjlist_outer_dict(self):
+        return Lict([dict() for _ in range(self.num_nodes)])
+
+    node_dict_factory = cheat_node_dict
+    adjlist_outer_dict_factory = cheat_adjlist_outer_dict
+
+    def init_nodes(self, n: int):
+        self.num_nodes = n
+        self._node = self.cheat_node_dict()
+        self._adj = self.cheat_adjlist_outer_dict()
+        # self._pred = self.cheat_adjlist_outer_dict()
+
+
+# The `Netlist` class represents a netlist, which is a collection of modules and nets in a graph
+# structure, and provides various properties and methods for working with the netlist.
 class Netlist:
     num_pads = 0
     cost_model = 0
 
     def __init__(
-        self, gra: nx.Graph, modules: Union[range, List], nets: Union[range, List]
+        self,
+        ugraph: nx.Graph,
+        modules: Union[range, List[Any]],
+        nets: Union[range, List[Any]],
     ):
         """
-        The function initializes an object with a graph, modules, and nets, and calculates various
-        properties of the graph and modules.
+        The function initializes an object with a graph, modules, and nets, and calculates some properties
+        of the graph.
 
-        :param gra: The parameter `gra` is a graph object representing the connectivity between modules and
-        nets. It is an instance of the `nx.Graph` class from the NetworkX library
-        :type gra: nx.Graph
-        :param modules: The `modules` parameter represents a collection of nodes in a graph. It can be
-        either a range or a list of nodes
-        :type modules: Union[range, List]
-        :param nets: The `nets` parameter represents a collection of nets in a graph. A net is a connection
-        between two or more modules in a circuit or network. It can be represented as a range or a list of
-        net identifiers
-        :type nets: Union[range, List]
+        :param ugraph: The parameter `ugraph` is a graph object of type `nx.Graph`. It represents the graph
+            structure of the system
+        :type ugraph: nx.Graph
+        :param modules: The `modules` parameter is a list or range object that represents the modules in the
+            graph. Each module is a node in the graph
+        :type modules: Union[range, List[Any]]
+        :param nets: The `nets` parameter is a list or range that represents the nets in the graph. A net is
+            a connection between two or more modules
+        :type nets: Union[range, List[Any]]
         """
-        self.gra = gra
+        self.ugraph = ugraph
         self.modules = modules
         self.nets = nets
 
         self.num_modules = len(modules)
         self.num_nets = len(nets)
-        self.net_weight: Optional[Union[Dict, List[int]]] = None
+        # self.net_weight: Optional[Union[Dict, List[int]]] = None
         self.module_weight: Optional[Union[Dict, List[int]]] = None
-        self.module_fixed: Set = set()
+        self.module_fixed: set = set()
 
-        self.max_degree = max(self.gra.degree[cell] for cell in modules)
-        self.max_net_degree = max(self.gra.degree[net] for net in nets)
+        # self.module_dict = {}
+        # for v in enumerate(self.module_list):
+        #     self.module_dict[v] = v
+
+        # self.net_dict = {}
+        # for i_net, net in enumerate(self.net_list):
+        #     self.net_dict[net] = i_net
+
+        # self.module_fixed = module_fixed
+        # self.has_fixed_modules = (self.module_fixed != [])
+        self.max_degree = max(self.ugraph.degree[cell] for cell in modules)
+        # self.max_net_degree = max(self.ugraph.degree[net] for net in nets)
 
     def number_of_modules(self) -> int:
         """
@@ -75,97 +110,160 @@ class Netlist:
         return self.num_modules
 
     def number_of_nets(self) -> int:
-        """[summary]
-
-        Returns:
-            dtype:  description
+        """
+        The function "number_of_nets" returns the number of nets.
+        :return: The number of nets.
         """
         return self.num_nets
 
     def number_of_nodes(self) -> int:
-        """[summary]
-
-        Returns:
-            dtype:  description
         """
-        return self.gra.number_of_nodes()
+        The function "number_of_nodes" returns the number of nodes in a graph.
+        :return: The number of nodes in the graph.
+        """
+        return self.ugraph.number_of_nodes()
 
     def number_of_pins(self) -> int:
-        """[summary]
-
-        Returns:
-            dtype:  description
         """
-        return self.gra.number_of_edges()
+        The function `number_of_pins` returns the number of edges in a graph.
+        :return: The number of edges in the graph.
+        """
+        return self.ugraph.number_of_edges()
 
     def get_max_degree(self) -> int:
-        """[summary]
-
-        Returns:
-            dtype:  description
         """
-        return self.max_degree
-
-    def get_max_net_degree(self) -> int:
-        """[summary]
-
-        Returns:
-            dtype:  description
+        The function `get_max_degree` returns the maximum degree of nodes in a graph.
+        :return: the maximum degree of the nodes in the graph.
         """
-        return self.max_net_degree
+        return max(self.ugraph.degree[cell] for cell in self.modules)
 
-    def get_module_weight(self, vtx) -> int:
-        """[summary]
-
-        Arguments:
-            vtx (size_t):  description
-
-        Returns:
-            [size_t]:  description
+    def get_module_weight(self, v) -> int:
         """
-        return 1 if self.module_weight is None else self.module_weight[vtx]
+        The function `get_module_weight` returns the weight of a module given its index.
 
-    # def get_module_weight_by_id(self, vtx):
+        :param v: The parameter `v` in the `get_module_weight` function is of type `size_t`. It represents
+            the index or key of the module weight that you want to retrieve
+        :return: the value of `self.module_weight[v]`.
+        """
+        return self.module_weight[v]
+
+    # def get_module_weight_by_id(self, v):
     #     """[summary]
 
     #     Arguments:
-    #         vtx (size_t):  description
+    #         v (size_t):  description
 
     #     Returns:
     #         [size_t]:  description
     #     """
     #     return 1 if self.module_weight is None \
-    #         else self.module_weight[vtx]
+    #         else self.module_weight[v]
 
     def get_net_weight(self, _) -> int:
-        """[summary]
+        """
+        The function `get_net_weight` returns an integer value.
 
-        Arguments:
-            i_net (size_t):  description
-
-        Returns:
-            size_t:  description
+        :param _: The underscore (_) in the function signature is a convention in Python to indicate that
+            the parameter is not used within the function. It is often used when a parameter is required by the
+            function signature but not actually used within the function's implementation. In this case, the
+            underscore (_) is used as a placeholder for
+        :return: An integer value of 1 is being returned.
         """
         return 1
 
+    def __iter__(self):
+        """
+        The function returns an iterator over all modules in the Netlist.
+        :return: The `iter(self.modules)` is being returned.
+        """
+        return iter(self.modules)
+
 
 def read_json(filename):
+    """
+    The function `read_json` reads a JSON file, converts it into a graph, and creates a netlist object
+    with module and net weights.
+
+    :param filename: The filename parameter is the name of the JSON file that contains the data you want
+        to read
+    :return: an object of type `Netlist`.
+    """
     with open(filename, "r") as fr:
         data = json.load(fr)
-    gra = json_graph.node_link_graph(data)
-    num_modules = gra.graph["num_modules"]
-    num_nets = gra.graph["num_nets"]
-    num_pads = gra.graph["num_pads"]
+    ugraph = json_graph.node_link_graph(data)
+    num_modules = ugraph.graph["num_modules"]
+    num_nets = ugraph.graph["num_nets"]
+    num_pads = ugraph.graph["num_pads"]
     hyprgraph = Netlist(
-        gra, range(num_modules), range(num_modules, num_modules + num_nets)
+        ugraph, range(num_modules), range(num_modules, num_modules + num_nets)
     )
     hyprgraph.num_pads = num_pads
+    hyprgraph.module_weight = RepeatArray(1, num_modules)
+    hyprgraph.net_weight = RepeatArray(1, num_nets)
+    # hyprgraph.net_weight = ShiftArray(1 for _ in range(num_nets))
+    # hyprgraph.net_weight.set_start(num_modules)
+    return hyprgraph
+
+
+def create_inverter():
+    gr = ThinGraph()
+    gr.add_nodes_from(["a0", "p1", "p2", "n0", "n1"])
+    nets = ["n0", "n1"]
+    modules = ["a0", "p1", "p2"]
+    module_weight = {"a0": 1, "p1": 0, "p2": 0}
+
+    gr.add_edges_from(
+        [
+            ("n0", "p1", {"dir": "I"}),
+            ("n0", "a0", {"dir": "O"}),
+            ("n1", "a0", {"dir": "I"}),
+            ("n1", "p2", {"dir": "O"}),
+        ]
+    )
+    gr.graph["num_modules"] = 3
+    gr.graph["num_nets"] = 2
+    gr.graph["num_pads"] = 2
+    hyprgraph = Netlist(gr, modules, nets)
+    hyprgraph.module_weight = module_weight
+    hyprgraph.net_weight = RepeatArray(1, len(nets))
+    hyprgraph.num_pads = 2
+    return hyprgraph
+
+
+def create_inverter2():
+    gr = ThinGraph()
+    gr.add_nodes_from([0, 1, 2, 3, 4])
+    nets = range(3, 5)
+    modules = range(3)
+    module_weight = [1, 0, 0]
+
+    gr.add_edges_from(
+        [
+            (3, 1, {"dir": "I"}),
+            (3, 0, {"dir": "O"}),
+            (4, 0, {"dir": "I"}),
+            (4, 2, {"dir": "O"}),
+        ]
+    )
+    gr.graph["num_modules"] = 3
+    gr.graph["num_nets"] = 2
+    gr.graph["num_pads"] = 2
+    hyprgraph = Netlist(gr, modules, nets)
+    hyprgraph.module_weight = module_weight
+    hyprgraph.net_weight = RepeatArray(1, len(nets))
+    hyprgraph.num_pads = 2
     return hyprgraph
 
 
 def create_drawf():
-    gra = ThinGraph()
-    gra.add_nodes_from(
+    """
+    The function `create_drawf` creates a graph and netlist object with specified nodes, edges, and
+    weights.
+    :return: an instance of the Netlist class, which is created using the ThinGraph class and some
+        predefined modules and nets.
+    """
+    ugraph = ThinGraph()
+    ugraph.add_nodes_from(
         [
             "a0",
             "a1",
@@ -190,10 +288,13 @@ def create_drawf():
         "n4",
         "n5",
     ]
+    # net_map = {net: i_net for i_net, net in enumerate(nets)}
     modules = ["a0", "a1", "a2", "a3", "p1", "p2", "p3"]
+    # module_map = {v: i_v for i_v, v in enumerate(modules)}
+    # module_weight = [1, 3, 4, 2, 0, 0, 0]
     module_weight = {"a0": 1, "a1": 3, "a2": 4, "a3": 2, "p1": 0, "p2": 0, "p3": 0}
 
-    gra.add_edges_from(
+    ugraph.add_edges_from(
         [
             ("n0", "p1", {"dir": "I"}),
             ("n0", "a0", {"dir": "I"}),
@@ -211,20 +312,27 @@ def create_drawf():
             ("n5", "p2", {"dir": "B"}),
         ]
     )
-    gra.graph["num_modules"] = 7
-    gra.graph["num_nets"] = 6
-    gra.graph["num_pads"] = 3
-    hyprgraph = Netlist(gra, modules, nets)
+    ugraph.graph["num_modules"] = 7
+    ugraph.graph["num_nets"] = 6
+    ugraph.graph["num_pads"] = 3
+    hyprgraph = Netlist(ugraph, modules, nets)
     hyprgraph.module_weight = module_weight
+    hyprgraph.net_weight = RepeatArray(1, len(nets))
     hyprgraph.num_pads = 3
     return hyprgraph
 
 
 def create_test_netlist():
-    gra = ThinGraph()
-    gra.add_nodes_from(["a0", "a1", "a2", "a3", "a4", "a5"])
+    """
+    The function `create_test_netlist` creates a test netlist with nodes, edges, module weights, and net
+    weights.
+    :return: an instance of the `Netlist` class, which represents a netlist with modules and nets.
+    """
+    ugraph = ThinGraph()
+    ugraph.add_nodes_from(["a0", "a1", "a2", "a3", "a4", "a5"])
+    # module_weight = [533, 543, 532]
     module_weight = {"a0": 533, "a1": 543, "a2": 532}
-    gra.add_edges_from(
+    ugraph.add_edges_from(
         [
             ("a3", "a0"),
             ("a3", "a1"),
@@ -235,13 +343,17 @@ def create_test_netlist():
         ]
     )
 
-    gra.graph["num_modules"] = 3
-    gra.graph["num_nets"] = 3
+    ugraph.graph["num_modules"] = 3
+    ugraph.graph["num_nets"] = 3
     modules = ["a0", "a1", "a2"]
+    # module_map = {v: i_v for i_v, v in enumerate(modules)}
     nets = ["a3", "a4", "a5"]
+    # net_weight = {net: 1 for net in nets}
+    net_weight = RepeatArray(1, len(nets))
 
-    hyprgraph = Netlist(gra, modules, nets)
+    hyprgraph = Netlist(ugraph, modules, nets)
     hyprgraph.module_weight = module_weight
+    hyprgraph.net_weight = net_weight
     return hyprgraph
 
 
@@ -280,11 +392,12 @@ def vdcorput(n, base=2):
     return [vdc(i, base) for i in range(n)]
 
 
-def form_graph(ndim, mdim, _, eta, seed=None):
+def form_graph(N, M, _, eta, seed=None):  # ignore pos
     """Form N by N grid of nodes, connect nodes within eta.
         mu and eta are relative to 1/(N-1)
 
     Arguments:
+        t (float): the best-so-far optimal value
         pos ([type]): [description]
         eta ([type]): [description]
 
@@ -298,20 +411,25 @@ def form_graph(ndim, mdim, _, eta, seed=None):
         random.seed(seed)
 
     # connect nodes with edges
-    gra = bipartite.random_graph(ndim, mdim, eta)
-    return gra
+    ugraph = bipartite.random_graph(N, M, eta)
+    # ugraph = nx.DiGraph(ugraph)
+    return ugraph
 
 
-def create_random_graph(N=30, M=26, eta=0.1):
+def create_random_hgraph(N=30, M=26, eta=0.1):
     T = N + M
     xbase = 2
     ybase = 3
     x = [i for i in vdcorput(T, xbase)]
     y = [i for i in vdcorput(T, ybase)]
     pos = zip(x, y)
-    gra = form_graph(N, M, pos, eta, seed=5)
+    ugraph = form_graph(N, M, pos, eta, seed=5)
 
-    gra.graph["num_modules"] = N
-    gra.graph["num_nets"] = M
-    hyprgraph = Netlist(gra, range(N), range(N, N + M))
+    ugraph.graph["num_modules"] = N
+    ugraph.graph["num_nets"] = M
+    hyprgraph = Netlist(ugraph, range(N), range(N, N + M))
+    hyprgraph.module_weight = RepeatArray(1, N)
+    hyprgraph.net_weight = RepeatArray(1, M)
+    # hyprgraph.net_weight = ShiftArray(1 for _ in range(M))
+    # hyprgraph.net_weight.set_start(N)
     return hyprgraph
