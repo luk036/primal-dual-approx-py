@@ -24,7 +24,7 @@ import argparse
 import logging
 import sys
 
-from netlistx import __version__
+from pldl import __version__
 
 __author__ = "Wai-Shing Luk"
 __copyright__ = "Wai-Shing Luk"
@@ -76,7 +76,7 @@ def parse_args(args):
     parser.add_argument(
         "--version",
         action="version",
-        version="netlistx {ver}".format(ver=__version__),
+        version="pldl {ver}".format(ver=__version__),
     )
     parser.add_argument(dest="n", help="n-th Fibonacci number", type=int, metavar="INT")
     parser.add_argument(

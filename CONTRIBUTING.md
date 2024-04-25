@@ -370,5 +370,5 @@ on [PyPI], the following steps can be used to release a new version for
 
 ```
 
-[repository]: https://github.com/<USERNAME>/netlistx
-[issue tracker]: https://github.com/<USERNAME>/netlistx/issues
+[repository]: https://github.com/<USERNAME>/primal-dual-approx-py
+[issue tracker]: https://github.com/<USERNAME>/primal-dual-approx-py/issues

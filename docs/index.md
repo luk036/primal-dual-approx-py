@@ -1,4 +1,4 @@
-# 🖇  primal-dual-approx-py
+# ☯  primal-dual-approx-py
 
 Add a short description here!
 

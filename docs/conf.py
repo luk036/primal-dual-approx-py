@@ -34,7 +34,7 @@ except ImportError:
     from sphinx import apidoc
 
 output_dir = os.path.join(__location__, "api")
-module_dir = os.path.join(__location__, "../src/netlistx")
+module_dir = os.path.join(__location__, "../src/pldl")
 try:
     shutil.rmtree(output_dir)
 except FileNotFoundError:
@@ -106,7 +106,7 @@ source_suffix = [".rst", ".md"]
 master_doc = "index"
 
 # General information about the project.
-project = "netlistx"
+project = "pldl"
 copyright = "2023, Wai-Shing Luk"
 
 # The version info for the project you're documenting, acts as replacement for
@@ -118,7 +118,7 @@ copyright = "2023, Wai-Shing Luk"
 # If you don’t need the separation provided between version and release,
 # just set them both to the same value.
 try:
-    from netlistx import __version__ as version
+    from pldl import __version__ as version
 except ImportError:
     version = ""
 
@@ -245,7 +245,7 @@ html_static_path = ["_static"]
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "netlistx-doc"
+htmlhelp_basename = "pldl-doc"
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -262,7 +262,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-    ("index", "user_guide.tex", "netlistx Documentation", "Wai-Shing Luk", "manual")
+    ("index", "user_guide.tex", "pldl Documentation", "Wai-Shing Luk", "manual")
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
