@@ -3,7 +3,7 @@ from pldl.netlist import create_drawf
 from pldl.netlist_algo import min_maximal_matching
 
 
-def test_min_vertex_cover():
+def test_min_vertex_cover() -> None:
     hyprgraph = create_drawf()
     weight = dict()
 
@@ -14,7 +14,7 @@ def test_min_vertex_cover():
     assert rslt == 6
 
 
-def test_min_maximal_matching():
+def test_min_maximal_matching() -> None:
     hyprgraph = create_drawf()
     weight = dict()
 

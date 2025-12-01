@@ -3,7 +3,7 @@ from pldl.graph_algo import min_maximal_independant_set, min_vertex_cover_fast
 from pldl.netlist import create_drawf
 
 
-def test_min_vertex_cover():
+def test_min_vertex_cover() -> None:
     hyprgraph = create_drawf()
     weight = dict()
 
@@ -15,7 +15,7 @@ def test_min_vertex_cover():
     assert rslt == 9
 
 
-def test_min_vertex_cover_fast():
+def test_min_vertex_cover_fast() -> None:
     hyprgraph = create_drawf()
     weight = dict()
 
@@ -27,7 +27,7 @@ def test_min_vertex_cover_fast():
     assert rslt == 8
 
 
-def test_min_maximal_independant_set():
+def test_min_maximal_independant_set() -> None:
     hyprgraph = create_drawf()
     weight = dict()
 
@@ -38,7 +38,7 @@ def test_min_maximal_independant_set():
     assert rslt == 7
 
 
-def test_min_cycle_cover():
+def test_min_cycle_cover() -> None:
     hyprgraph = create_drawf()
     weight = dict()
 
@@ -50,7 +50,7 @@ def test_min_cycle_cover():
     assert rslt == 3
 
 
-def test_min_odd_cycle_cover():
+def test_min_odd_cycle_cover() -> None:
     hyprgraph = create_drawf()
     weight = dict()
 
