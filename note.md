@@ -12,9 +12,9 @@
   - e.g. subproblem of a complex problem
 - Demand a quick solution
   - e.g. bipartite matching problem
-    - Polynomial-time solvable, but 
-    - Network flow algorithm requires O(N⋅M) 
-- Dual problem is "easier" to **solve** 
+    - Polynomial-time solvable, but
+    - Network flow algorithm requires O(N⋅M)
+- Dual problem is "easier" to **solve**
   - e.g. without sorting
   - counter-example: facility location problems
 - Extensible for hypergraph versions.

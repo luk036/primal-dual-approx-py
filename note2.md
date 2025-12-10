@@ -6,7 +6,7 @@
 
 ## Example: Vertex Cover
 
-- Instance: G = (V, E) 
+- Instance: G = (V, E)
 - Solution: A vertex cover for G, i.e., a subset U such that, for each edge (u,v) ∈ E, at least one of u and v belongs to U
 - Measure: Cardinality of the vertex cover, i.e. ∣U∣
 
@@ -43,8 +43,8 @@ Requirements:
 ## Weighted Vertex Cover
 
 - Instance: G = (V, E) with non-negative vertex weights w: V ↦ N
-- Solution: A vertex cover for G, i.e., a subset U 
-  such that, for each edge (u,v) ∈ E, at least one of 
+- Solution: A vertex cover for G, i.e., a subset U
+  such that, for each edge (u,v) ∈ E, at least one of
   u and v belongs to U
 
 ---
@@ -57,7 +57,7 @@ Requirements:
              ╱    v    v
              ‾‾‾
              v∈V
- 
+
     s.t.    x  + x  ≥ 1, ∀ (u, v) ∈ E
              u    v
 
@@ -75,12 +75,12 @@ Requirements:
             ⎜╱    v    v⎟
             ⎜‾‾‾        ⎟
             ⎝v∈V        ⎠
-                     
-    s.t.    x  + x  ≥ 1, ∀ (u, v) ∈ E      
-             u    v          
+
+    s.t.    x  + x  ≥ 1, ∀ (u, v) ∈ E
+             u    v
 
             0 ≤ x  ≤ 1, ∀ v ∈ V.
-                 v    
+                 v
 ```
 
 ---
@@ -88,17 +88,17 @@ Requirements:
 ## Dual LP of LP Relaxation
 
 ```
-            ⎛___   ⎞    
-    max     ⎜╲   y ⎟    
-            ⎜╱    e⎟    
-            ⎜‾‾‾   ⎟    
-            ⎝e∈E   ⎠    
-           ___          
+            ⎛___   ⎞
+    max     ⎜╲   y ⎟
+            ⎜╱    e⎟
+            ⎜‾‾‾   ⎟
+            ⎝e∈E   ⎠
+           ___
     s.t.   ╲   y  ≤ w , ∀ v ∈ V,
            ╱    e    v
-           ‾‾‾          
+           ‾‾‾
         e∈adj(v)
 
             y  ≥ 0, ∀ e ∈ E.
-             e              
+             e
 ```
