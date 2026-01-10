@@ -8,6 +8,7 @@ Example
 
 import matplotlib.pyplot as plt
 import networkx as nx
+
 from pldl.graph_algo import min_maximal_independant_set
 
 gra = nx.random_geometric_graph(200, 0.1)

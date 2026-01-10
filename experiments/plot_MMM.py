@@ -1,14 +1,14 @@
-from random import randint
-
-from pldl.netlist import Netlist, create_random_graph
-from pldl.netlist_algo import min_maximal_matching
-import matplotlib.pyplot as plt
-import networkx as nx
 import argparse
 import logging
 import sys
+from random import randint
+
+import matplotlib.pyplot as plt
+import networkx as nx
 
 from pldl import __version__
+from pldl.netlist import Netlist, create_random_graph
+from pldl.netlist_algo import min_maximal_matching
 
 __author__ = "Wai-Shing Luk"
 __copyright__ = "Wai-Shing Luk"

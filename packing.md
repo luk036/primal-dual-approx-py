@@ -120,5 +120,3 @@ Step 2
   - e.g. C1 = [L1, F], C2 = [L2, F]
 
 - Set Cover problem?
-
-
